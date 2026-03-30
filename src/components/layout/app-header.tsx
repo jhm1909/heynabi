@@ -1,5 +1,4 @@
-import { Link } from '@tanstack/react-router'
-import { Mic, History, Settings } from 'lucide-react'
+
 import { ThemeToggle } from '#/components/shared/theme-toggle'
 import { UserMenu } from '#/components/auth/user-menu'
 
@@ -16,7 +15,7 @@ interface AppHeaderProps {
 
 export function AppHeader({ user, onMenuToggle }: AppHeaderProps) {
     return (
-        <header className="flex h-14 shrink-0 items-center justify-between border-b bg-background/95 px-4 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <header className="flex h-14 shrink-0 items-center justify-between border-b bg-background/95 px-4 backdrop-blur supports-backdrop-filter:bg-background/60">
             <div className="flex items-center gap-3">
                 {/* Mobile hamburger */}
                 <button

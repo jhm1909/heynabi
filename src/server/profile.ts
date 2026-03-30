@@ -1,18 +1,21 @@
 import { createServerFn } from '@tanstack/react-start'
 import { getRequest } from '@tanstack/react-start/server'
+import { z } from 'zod'
 import { createServerSupabaseClient } from '#/lib/supabase/server'
 
-interface UpdateProfileInput {
-    displayName?: string
-    defaultSourceLang?: string
-    defaultTargetLang?: string
-}
+const updateProfileInput = z.object({
+    displayName: z.string().optional(),
+    defaultSourceLang: z.string().optional(),
+    defaultTargetLang: z.string().optional(),
+})
 
 /**
  * Update user profile preferences.
  */
 export const updateProfile = createServerFn({ method: 'POST' })
-    .handler(async ({ data }: { data: UpdateProfileInput }) => {
+    .inputValidator(updateProfileInput)
+    .handler(async (ctx) => {
+        const data = ctx.data
         const request = getRequest()
         const cookieHeader = request.headers.get('cookie') ?? ''
         const supabase = createServerSupabaseClient(cookieHeader)

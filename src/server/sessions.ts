@@ -1,24 +1,33 @@
 import { createServerFn } from '@tanstack/react-start'
 import { getRequest } from '@tanstack/react-start/server'
+import { z } from 'zod'
 import { createServerSupabaseClient } from '#/lib/supabase/server'
 
-interface SaveSessionInput {
-    sourceLang: string
-    targetLang: string
-    title?: string
-    durationMs?: number
-    utterances: Array<{
-        original: string
-        translation?: string
-        timestampMs?: number
-    }>
-}
+const saveSessionInput = z.object({
+    sourceLang: z.string(),
+    targetLang: z.string(),
+    title: z.string().optional(),
+    durationMs: z.number().optional(),
+    utterances: z.array(
+        z.object({
+            original: z.string(),
+            translation: z.string().optional(),
+            timestampMs: z.number().optional(),
+        }),
+    ),
+})
+
+const sessionIdInput = z.object({
+    sessionId: z.string(),
+})
 
 /**
  * Save a completed session with its utterances.
  */
 export const saveSession = createServerFn({ method: 'POST' })
-    .handler(async ({ data }: { data: SaveSessionInput }) => {
+    .inputValidator(saveSessionInput)
+    .handler(async (ctx) => {
+        const data = ctx.data
         const request = getRequest()
         const cookieHeader = request.headers.get('cookie') ?? ''
         const supabase = createServerSupabaseClient(cookieHeader)
@@ -86,7 +95,9 @@ export const listSessions = createServerFn({ method: 'GET' }).handler(
  * Get a single session with its utterances.
  */
 export const getSession = createServerFn({ method: 'GET' })
-    .handler(async ({ data }: { data: { sessionId: string } }) => {
+    .inputValidator(sessionIdInput)
+    .handler(async (ctx) => {
+        const data = ctx.data
         const request = getRequest()
         const cookieHeader = request.headers.get('cookie') ?? ''
         const supabase = createServerSupabaseClient(cookieHeader)

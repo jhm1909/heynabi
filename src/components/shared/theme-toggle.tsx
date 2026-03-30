@@ -12,14 +12,27 @@ function getResolvedTheme(mode: Theme): 'light' | 'dark' {
     }
     return mode
 }
+function applyTheme(mode: 'light' | 'dark') {
+    const root = document.documentElement
+    root.classList.remove('light', 'dark')
+    root.classList.add(mode)
+    root.setAttribute('data-theme', mode)
+    root.style.colorScheme = mode
+}
 
 export function ThemeToggle() {
     const [theme, setTheme] = useState<Theme>('auto')
 
     useEffect(() => {
         const stored = localStorage.getItem('theme') as Theme | null
-        if (stored === 'light' || stored === 'dark' || stored === 'auto') {
+        if (stored === 'light' || stored === 'dark') {
             setTheme(stored)
+            applyTheme(stored)
+        } else {
+            // auto mode — let CSS @media handle it, but clear any stale attributes
+            const root = document.documentElement
+            root.removeAttribute('data-theme')
+            root.classList.remove('light', 'dark')
         }
     }, [])
 
@@ -29,11 +42,7 @@ export function ThemeToggle() {
 
         setTheme(next)
         localStorage.setItem('theme', next)
-
-        const root = document.documentElement
-        root.classList.remove('light', 'dark')
-        root.classList.add(next)
-        root.style.colorScheme = next
+        applyTheme(next)
     }
 
     const resolved = getResolvedTheme(theme)

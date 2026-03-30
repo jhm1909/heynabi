@@ -1,12 +1,19 @@
 import { createServerFn } from '@tanstack/react-start'
 import { getRequest } from '@tanstack/react-start/server'
+import { z } from 'zod'
 import { createServerSupabaseClient } from '#/lib/supabase/server'
+
+const sessionIdInput = z.object({
+    sessionId: z.string(),
+})
 
 /**
  * Export a session as plain text (TXT format).
  */
 export const exportSessionTxt = createServerFn({ method: 'POST' })
-    .handler(async ({ data }: { data: { sessionId: string } }) => {
+    .inputValidator(sessionIdInput)
+    .handler(async (ctx) => {
+        const data = ctx.data
         const request = getRequest()
         const cookieHeader = request.headers.get('cookie') ?? ''
         const supabase = createServerSupabaseClient(cookieHeader)
@@ -49,7 +56,9 @@ export const exportSessionTxt = createServerFn({ method: 'POST' })
  * Export a session as SRT subtitle format.
  */
 export const exportSessionSrt = createServerFn({ method: 'POST' })
-    .handler(async ({ data }: { data: { sessionId: string } }) => {
+    .inputValidator(sessionIdInput)
+    .handler(async (ctx) => {
+        const data = ctx.data
         const request = getRequest()
         const cookieHeader = request.headers.get('cookie') ?? ''
         const supabase = createServerSupabaseClient(cookieHeader)

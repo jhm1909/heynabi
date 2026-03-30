@@ -38,7 +38,7 @@ const fadeUp = {
         transition: {
             delay: i * 0.1,
             duration: 0.5,
-            ease: [0.16, 1, 0.3, 1],
+            ease: [0.16, 1, 0.3, 1] as const,
         },
     }),
 }
@@ -55,7 +55,7 @@ function LandingPage() {
                 <motion.div
                     custom={0}
                     variants={fadeUp}
-                    className="island-kicker rounded-full border border-[var(--chip-line)] bg-[var(--chip-bg)] px-4 py-1.5"
+                    className="island-kicker rounded-full border border-(--chip-line) bg-(--chip-bg) px-4 py-1.5"
                 >
                     ✨ Powered by Gemini 2.5 Flash
                 </motion.div>
@@ -66,7 +66,7 @@ function LandingPage() {
                     className="display-title max-w-2xl text-5xl font-bold leading-[1.1] tracking-tight sm:text-6xl"
                 >
                     Real-time translation for{' '}
-                    <span className="bg-gradient-to-r from-[var(--lagoon-deep)] to-[var(--lagoon)] bg-clip-text text-transparent">
+                    <span className="bg-linear-to-r from-(--lagoon-deep) to-(--lagoon) bg-clip-text text-transparent">
                         language learners
                     </span>
                 </motion.h1>
@@ -74,7 +74,7 @@ function LandingPage() {
                 <motion.p
                     custom={2}
                     variants={fadeUp}
-                    className="max-w-lg text-lg text-[var(--sea-ink-soft)]"
+                    className="max-w-lg text-lg text-(--sea-ink-soft)"
                 >
                     Listen to lectures in Korean, Chinese, or Japanese — and read the
                     translation in your language instantly.
@@ -86,7 +86,7 @@ function LandingPage() {
                     className="mt-2 flex flex-col items-center gap-3"
                 >
                     <LoginButton />
-                    <p className="text-xs text-[var(--sea-ink-soft)]">
+                    <p className="text-xs text-(--sea-ink-soft)">
                         Free to use • No credit card required
                     </p>
                 </motion.div>
@@ -112,15 +112,15 @@ function LandingPage() {
                             whileInView="visible"
                             viewport={{ once: true, margin: '-40px' }}
                             variants={fadeUp}
-                            className="feature-card rounded-xl border border-[var(--line)] p-6 transition-all"
+                            className="feature-card rounded-xl border border-(--line) p-6 transition-all"
                         >
                             <div className="flex items-start gap-4">
-                                <div className="rounded-lg bg-[var(--lagoon)]/10 p-2.5">
-                                    <feature.icon className="h-5 w-5 text-[var(--lagoon-deep)]" />
+                                <div className="rounded-lg bg-(--lagoon)/10 p-2.5">
+                                    <feature.icon className="h-5 w-5 text-(--lagoon-deep)" />
                                 </div>
                                 <div>
                                     <h3 className="font-semibold">{feature.title}</h3>
-                                    <p className="mt-1 text-sm text-[var(--sea-ink-soft)]">
+                                    <p className="mt-1 text-sm text-(--sea-ink-soft)">
                                         {feature.description}
                                     </p>
                                 </div>
@@ -131,7 +131,7 @@ function LandingPage() {
             </section>
 
             {/* Footer */}
-            <footer className="site-footer mt-24 w-full rounded-t-xl px-6 py-6 text-center text-sm text-[var(--sea-ink-soft)]">
+            <footer className="site-footer mt-24 w-full rounded-t-xl px-6 py-6 text-center text-sm text-(--sea-ink-soft)">
                 Hey Nabi 🦋 — Built for students who learn across languages
             </footer>
         </div>
