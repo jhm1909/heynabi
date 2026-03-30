@@ -1,7 +1,10 @@
+import { useEffect, useRef } from 'react'
 import { createFileRoute } from '@tanstack/react-router'
 import { useSoniox } from '#/features/stt/hooks/use-soniox'
+import { useTranslation } from '#/features/translation/hooks/use-translation'
 import { useSessionStore } from '#/stores/session-store'
 import { TranscriptPanel } from '#/components/session/transcript-panel'
+import { TranslationPanel } from '#/components/session/translation-panel'
 import { SessionControls } from '#/components/session/session-controls'
 import { LanguageSelector } from '#/components/session/language-selector'
 
@@ -16,11 +19,31 @@ function SessionPage() {
         setSourceLang,
         setTargetLang,
         isRecording,
+        finalTexts,
     } = useSessionStore()
+
+    const lastTranslatedCount = useRef(0)
 
     const stt = useSoniox({
         language: sourceLang,
     })
+
+    const translation = useTranslation({
+        sourceLang,
+        targetLang,
+    })
+
+    // Auto-translate when new final text arrives from STT
+    useEffect(() => {
+        if (finalTexts.length > lastTranslatedCount.current) {
+            const newTexts = finalTexts.slice(lastTranslatedCount.current)
+            lastTranslatedCount.current = finalTexts.length
+
+            for (const entry of newTexts) {
+                translation.translate(entry.original)
+            }
+        }
+    }, [finalTexts, translation])
 
     return (
         <div className="flex h-full flex-col">
@@ -43,10 +66,10 @@ function SessionPage() {
                 />
             </div>
 
-            {/* Error banner */}
+            {/* Error banners */}
             {stt.error && (
                 <div className="border-b bg-destructive/10 px-4 py-2 text-sm text-destructive">
-                    {stt.error}
+                    🎤 {stt.error}
                 </div>
             )}
 
@@ -64,17 +87,19 @@ function SessionPage() {
                     </div>
                 </div>
 
-                {/* Translation — will be wired in Story-Translation */}
+                {/* Translation */}
                 <div className="flex flex-col overflow-auto">
                     <div className="border-b px-4 py-2">
                         <h2 className="text-sm font-semibold text-muted-foreground">
                             Translation
                         </h2>
                     </div>
-                    <div className="flex-1 overflow-auto p-4">
-                        <p className="text-sm text-muted-foreground">
-                            Translations will appear here when you start recording...
-                        </p>
+                    <div className="flex-1 overflow-auto">
+                        <TranslationPanel
+                            translatedText={translation.translatedText}
+                            isTranslating={translation.isTranslating}
+                            error={translation.error}
+                        />
                     </div>
                 </div>
             </div>
