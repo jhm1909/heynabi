@@ -1,0 +1,23 @@
+{
+    "app.title": "Hey Nabi",
+    "app.description": "언어 학습자를 위한 실시간 번역 플랫폼",
+    "nav.home": "홈",
+    "nav.session": "세션",
+    "nav.history": "기록",
+    "nav.settings": "설정",
+    "auth.signIn": "Google로 로그인",
+    "auth.signOut": "로그아웃",
+    "session.start": "시작",
+    "session.stop": "정지",
+    "session.pause": "일시정지",
+    "session.resume": "재개",
+    "session.transcript": "녹취록",
+    "session.translation": "번역",
+    "session.selectSource": "원본 언어",
+    "session.selectTarget": "번역 언어",
+    "lang.ko": "한국어",
+    "lang.vi": "베트남어",
+    "lang.en": "영어",
+    "lang.zh": "중국어",
+    "lang.ja": "일본어"
+}

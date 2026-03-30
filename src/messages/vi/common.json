@@ -1,0 +1,23 @@
+{
+    "app.title": "Hey Nabi",
+    "app.description": "Nền tảng dịch thuật thời gian thực cho người học ngôn ngữ",
+    "nav.home": "Trang chủ",
+    "nav.session": "Phiên dịch",
+    "nav.history": "Lịch sử",
+    "nav.settings": "Cài đặt",
+    "auth.signIn": "Đăng nhập bằng Google",
+    "auth.signOut": "Đăng xuất",
+    "session.start": "Bắt đầu",
+    "session.stop": "Dừng",
+    "session.pause": "Tạm dừng",
+    "session.resume": "Tiếp tục",
+    "session.transcript": "Bản ghi",
+    "session.translation": "Bản dịch",
+    "session.selectSource": "Ngôn ngữ nguồn",
+    "session.selectTarget": "Ngôn ngữ đích",
+    "lang.ko": "Tiếng Hàn",
+    "lang.vi": "Tiếng Việt",
+    "lang.en": "Tiếng Anh",
+    "lang.zh": "Tiếng Trung",
+    "lang.ja": "Tiếng Nhật"
+}

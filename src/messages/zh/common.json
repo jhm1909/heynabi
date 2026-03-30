@@ -1,0 +1,23 @@
+{
+    "app.title": "Hey Nabi",
+    "app.description": "语言学习者的实时翻译平台",
+    "nav.home": "首页",
+    "nav.session": "会话",
+    "nav.history": "历史",
+    "nav.settings": "设置",
+    "auth.signIn": "使用Google登录",
+    "auth.signOut": "退出",
+    "session.start": "开始",
+    "session.stop": "停止",
+    "session.pause": "暂停",
+    "session.resume": "继续",
+    "session.transcript": "转录",
+    "session.translation": "翻译",
+    "session.selectSource": "源语言",
+    "session.selectTarget": "目标语言",
+    "lang.ko": "韩语",
+    "lang.vi": "越南语",
+    "lang.en": "英语",
+    "lang.zh": "中文",
+    "lang.ja": "日语"
+}
