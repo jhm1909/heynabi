@@ -14,9 +14,13 @@ export function LoginButton() {
     }
 
     return (
-        <Button onClick={handleLogin} size="lg" variant="default">
+        <Button
+            onClick={handleLogin}
+            size="lg"
+            className="group relative gap-2 overflow-hidden bg-[var(--lagoon-deep)] px-6 text-white shadow-lg shadow-[var(--lagoon-deep)]/20 transition-all hover:bg-[var(--lagoon-deep)]/90 hover:shadow-xl hover:shadow-[var(--lagoon-deep)]/30"
+        >
             <svg
-                className="mr-2 h-5 w-5"
+                className="h-5 w-5 transition-transform group-hover:scale-110"
                 viewBox="0 0 24 24"
                 xmlns="http://www.w3.org/2000/svg"
             >

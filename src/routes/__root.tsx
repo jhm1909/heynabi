@@ -22,24 +22,19 @@ export const Route = createRootRoute({
       {
         name: 'description',
         content:
-          'Real-time translation platform for Asian language learners',
+          'Real-time translation platform for Asian language learners. Listen to lectures and read AI translations instantly.',
       },
+      { property: 'og:title', content: 'Hey Nabi 🦋 — Real-time Translation' },
+      {
+        property: 'og:description',
+        content:
+          'AI-powered real-time translation for students. Korean, Vietnamese, English, Chinese, Japanese.',
+      },
+      { property: 'og:type', content: 'website' },
     ],
     links: [
       { rel: 'stylesheet', href: appCss },
-      {
-        rel: 'preconnect',
-        href: 'https://fonts.googleapis.com',
-      },
-      {
-        rel: 'preconnect',
-        href: 'https://fonts.gstatic.com',
-        crossOrigin: 'anonymous',
-      },
-      {
-        rel: 'stylesheet',
-        href: 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap',
-      },
+      { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
     ],
   }),
   shellComponent: RootDocument,
