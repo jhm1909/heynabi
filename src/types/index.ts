@@ -1,5 +1,3 @@
-import type { Locale } from '#/lib/i18n'
-
 export interface Profile {
     id: string
     display_name: string | null

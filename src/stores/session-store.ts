@@ -1,5 +1,4 @@
 import { create } from 'zustand'
-import type { Locale } from '#/lib/i18n'
 
 interface SessionState {
     isRecording: boolean

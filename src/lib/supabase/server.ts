@@ -1,25 +1,22 @@
-import { createServerClient, parseCookieHeader } from '@supabase/ssr'
-import { getWebRequest } from '@tanstack/react-start/server'
+import { createServerClient } from '@supabase/ssr'
 
-export function createServerSupabaseClient() {
-    const request = getWebRequest()
-    const cookies = parseCookieHeader(
-        request.headers.get('cookie') ?? '',
-    )
-
+export function createServerSupabaseClient(cookieHeader: string) {
     return createServerClient(
         import.meta.env.VITE_SUPABASE_URL!,
         import.meta.env.VITE_SUPABASE_ANON_KEY!,
         {
             cookies: {
                 getAll() {
-                    return cookies.map((cookie) => ({
-                        name: cookie.name,
-                        value: cookie.value ?? '',
-                    }))
+                    return cookieHeader
+                        .split(';')
+                        .map((c) => {
+                            const [name, ...rest] = c.trim().split('=')
+                            return { name: name ?? '', value: rest.join('=') }
+                        })
+                        .filter((c) => c.name)
                 },
                 setAll() {
-                    // Server functions handle cookie setting via response headers
+                    // Cookie setting handled by response headers in server functions
                 },
             },
         },

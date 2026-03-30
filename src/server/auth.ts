@@ -1,4 +1,5 @@
 import { createServerFn } from '@tanstack/react-start'
+import { getRequest } from '@tanstack/react-start/server'
 import { createServerSupabaseClient } from '#/lib/supabase/server'
 
 /**
@@ -7,8 +8,12 @@ import { createServerSupabaseClient } from '#/lib/supabase/server'
  */
 export const getUser = createServerFn({ method: 'GET' }).handler(
     async () => {
-        const supabase = createServerSupabaseClient()
-        const { data: { user } } = await supabase.auth.getUser()
+        const request = getRequest()
+        const cookieHeader = request.headers.get('cookie') ?? ''
+        const supabase = createServerSupabaseClient(cookieHeader)
+        const {
+            data: { user },
+        } = await supabase.auth.getUser()
         return user
     },
 )
