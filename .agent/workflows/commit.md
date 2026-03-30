@@ -22,9 +22,9 @@ How would you like to commit?
 🎛️ 3. Custom — you control each step
 ```
 
-- If user says "nhanh" / "quick" / "go" → **Quick**
-- If user says "an toàn" / "safe" → **Safe**
-- If user says "tùy biến" / "custom" → **Custom**
+- If user says "quick" / "go" → **Quick**
+- If user says "safe" → **Safe**
+- If user says "custom" → **Custom**
 - Default (no preference): **Safe**
 
 ### Mode Behavior Matrix

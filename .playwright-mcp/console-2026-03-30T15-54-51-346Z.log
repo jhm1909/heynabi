@@ -1,3 +1,89 @@
 [  567522ms] [ERROR] Failed to load resource: net::ERR_INCOMPLETE_CHUNKED_ENCODING @ http://localhost:3000/__tsd/console-pipe/sse:0
 [  629615ms] [ERROR] Failed to load resource: net::ERR_INCOMPLETE_CHUNKED_ENCODING @ http://localhost:3000/__tsd/console-pipe/sse:0
 [  633105ms] [ERROR] Failed to load resource: net::ERR_INCOMPLETE_CHUNKED_ENCODING @ http://localhost:3000/__tsd/console-pipe/sse:0
+[ 1400120ms] [ERROR] A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+%s%s https://react.dev/link/hydration-mismatch 
+
+  ...
+    <Await promise={Promise}>
+      <AwaitInner promise={Promise}>
+        <RouterProvider router={{...}}>
+          <RouterContextProvider router={{...}}>
+            <Matches>
+              <SafeFragment fallback={null}>
+                <Transitioner>
+                <MatchesInner>
+                  <CatchBoundary getResetKey={function getResetKey} errorComponent={function ErrorComponent} ...>
+                    <CatchBoundaryImpl getResetKey={function getResetKey} onCatch={function}>
+                      <MatchImpl matchId="__root__/">
+                        <MatchView router={{...}} matchId="__root__/" resetKey={0} matchState={{routeId:"_...", ...}}>
+                          <RootDocument>
+                            <html lang="en" suppressHydrationWarning={true} data-tsd-source="/src/route...">
+                              <head
++                               data-tsd-source="/src/routes/__root.tsx:47:7"
+-                               data-tsd-source="/src/routes/__root.tsx:46:7"
+                              >
+                                <script
+                                  dangerouslySetInnerHTML={{__html:"(function(..."}}
++                                 data-tsd-source="/src/routes/__root.tsx:48:9"
+-                                 data-tsd-source="/src/routes/__root.tsx:47:9"
+                                >
+                                ...
+                              <body
+                                className="font-sans antialiased"
++                               data-tsd-source="/src/routes/__root.tsx:51:7"
+-                               data-tsd-source="/src/routes/__root.tsx:50:7"
+                              >
+ @ http://localhost:3000/src/routes/__root.tsx?t=1774887407845:53
+[ 1400364ms] [ERROR] %c[Server]%c color: #9333ea; font-weight: bold; color: inherit; [Client] A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+%s%s https://react.dev/link/hydration-mismatch 
+
+  ...
+    <Await promise={Promise}>
+      <AwaitInner promise={Promise}>
+        <RouterProvider router={{...}}>
+          <RouterContextProvider router={{...}}>
+            <Matches>
+              <SafeFragment fallback={null}>
+                <Transitioner>
+                <MatchesInner>
+                  <CatchBoundary getResetKey={function getResetKey} errorComponent={function ErrorComponent} ...>
+                    <CatchBoundaryImpl getResetKey={function getResetKey} onCatch={function}>
+                      <MatchImpl matchId="__root__/">
+                        <MatchView router={{...}} matchId="__root__/" resetKey={0} matchState={{routeId:"_...", ...}}>
+                          <RootDocument>
+                            <html lang="en" suppressHydrationWarning={true} data-tsd-source="/src/route...">
+                              <head
++                               data-tsd-source="http://localhost:3000/__tsd/open-source?source=%2Fsrc%2Froutes%2F__root.tsx%3A47%3A7"
+-                               data-tsd-source="http://localhost:3000/__tsd/open-source?source=%2Fsrc%2Froutes%2F__root.tsx%3A46%3A7"
+                              >
+                                <script
+                                  dangerouslySetInnerHTML={{__html:"(function(..."}}
++                                 data-tsd-source="http://localhost:3000/__tsd/open-source?source=%2Fsrc%2Froutes%2F__root.tsx%3A48%3A9"
+-                                 data-tsd-source="http://localhost:3000/__tsd/open-source?source=%2Fsrc%2Froutes%2F__root.tsx%3A47%3A9"
+                                >
+                                ...
+                              <body
+                                className="font-sans antialiased"
++                               data-tsd-source="http://localhost:3000/__tsd/open-source?source=%2Fsrc%2Froutes%2F__root.tsx%3A51%3A7"
+-                               data-tsd-source="http://localhost:3000/__tsd/open-source?source=%2Fsrc%2Froutes%2F__root.tsx%3A50%3A7"
+                              >
+ @ http://localhost:3000/src/routes/__root.tsx?t=1774887407845:116
