@@ -7,6 +7,7 @@ import {
 } from '#/components/ui/select'
 
 const sourceLanguages = [
+    { value: 'vi', label: '🇻🇳 Tiếng Việt' },
     { value: 'ko', label: '🇰🇷 한국어' },
     { value: 'en', label: '🇺🇸 English' },
     { value: 'zh', label: '🇨🇳 中文' },

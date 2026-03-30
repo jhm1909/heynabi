@@ -6,8 +6,7 @@ import { createServerSupabaseClient } from '#/lib/supabase/server'
  * Export a session as plain text (TXT format).
  */
 export const exportSessionTxt = createServerFn({ method: 'POST' })
-    .validator((input: { sessionId: string }) => input)
-    .handler(async ({ data }) => {
+    .handler(async ({ data }: { data: { sessionId: string } }) => {
         const request = getRequest()
         const cookieHeader = request.headers.get('cookie') ?? ''
         const supabase = createServerSupabaseClient(cookieHeader)
@@ -50,8 +49,7 @@ export const exportSessionTxt = createServerFn({ method: 'POST' })
  * Export a session as SRT subtitle format.
  */
 export const exportSessionSrt = createServerFn({ method: 'POST' })
-    .validator((input: { sessionId: string }) => input)
-    .handler(async ({ data }) => {
+    .handler(async ({ data }: { data: { sessionId: string } }) => {
         const request = getRequest()
         const cookieHeader = request.headers.get('cookie') ?? ''
         const supabase = createServerSupabaseClient(cookieHeader)

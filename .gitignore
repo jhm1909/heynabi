@@ -33,3 +33,7 @@ yarn-error.log*
 # TanStack
 .tanstack/
 src/routeTree.gen.ts
+
+# Playwright
+.playwright-mcp/
+

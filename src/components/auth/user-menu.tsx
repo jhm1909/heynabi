@@ -39,12 +39,12 @@ export function UserMenu({ user }: UserMenuProps) {
     return (
         <DropdownMenu>
             <DropdownMenuTrigger>
-                <button className="flex items-center gap-2 rounded-full outline-none ring-offset-background focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
+                <div className="flex cursor-pointer items-center gap-2 rounded-full outline-none ring-offset-background focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
                     <Avatar className="h-8 w-8">
                         <AvatarImage src={avatar} alt={name} />
                         <AvatarFallback className="text-xs">{initials}</AvatarFallback>
                     </Avatar>
-                </button>
+                </div>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-48">
                 <div className="px-2 py-1.5">

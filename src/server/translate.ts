@@ -8,19 +8,16 @@ import { getTranslationPrompt } from '#/features/translation/prompts'
  * Server-only — GEMINI_API_KEY never reaches the client.
  */
 export const translateText = createServerFn({ method: 'POST' })
-    .validator(
-        (input: { text: string; sourceLang: string; targetLang: string }) => input,
-    )
-    .handler(async ({ data }) => {
+    .handler(async ({ data }: { data: { text: string; sourceLang: string; targetLang: string } }) => {
         const { text, sourceLang, targetLang } = data
 
         if (!text.trim()) {
             return { translation: '' }
         }
 
-        const apiKey = process.env.GEMINI_API_KEY
-        if (!apiKey) {
-            throw new Error('GEMINI_API_KEY is not configured')
+        const apiKey = import.meta.env.GEMINI_API_KEY
+        if (!apiKey || apiKey === 'placeholder') {
+            return { translation: '[Gemini API key not configured]' }
         }
 
         const model = google('gemini-2.5-flash', { apiKey })
@@ -37,32 +34,25 @@ export const translateText = createServerFn({ method: 'POST' })
 
 /**
  * Streaming translation using Gemini 2.5 Flash.
- * Returns an event stream for token-by-token rendering.
  * NOTE: TanStack Start server functions don't support streaming yet,
- * so this uses generateText as a fallback and returns the full result.
- * Upgrade to streamText when SSE support is available.
+ * so this uses generateText as a fallback.
  */
 export const translateTextStream = createServerFn({ method: 'POST' })
-    .validator(
-        (input: { text: string; sourceLang: string; targetLang: string }) => input,
-    )
-    .handler(async ({ data }) => {
+    .handler(async ({ data }: { data: { text: string; sourceLang: string; targetLang: string } }) => {
         const { text, sourceLang, targetLang } = data
 
         if (!text.trim()) {
             return { translation: '', isStreamed: false }
         }
 
-        const apiKey = process.env.GEMINI_API_KEY
-        if (!apiKey) {
-            throw new Error('GEMINI_API_KEY is not configured')
+        const apiKey = import.meta.env.GEMINI_API_KEY
+        if (!apiKey || apiKey === 'placeholder') {
+            return { translation: '[Gemini API key not configured]', isStreamed: false }
         }
 
         const model = google('gemini-2.5-flash', { apiKey })
         const systemPrompt = getTranslationPrompt(sourceLang, targetLang)
 
-        // Use generateText for now — upgrade to streamText when
-        // TanStack Start supports SSE in server functions
         const { text: translation } = await generateText({
             model,
             system: systemPrompt,

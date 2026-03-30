@@ -2,24 +2,23 @@ import { createServerFn } from '@tanstack/react-start'
 import { getRequest } from '@tanstack/react-start/server'
 import { createServerSupabaseClient } from '#/lib/supabase/server'
 
+interface SaveSessionInput {
+    sourceLang: string
+    targetLang: string
+    title?: string
+    durationMs?: number
+    utterances: Array<{
+        original: string
+        translation?: string
+        timestampMs?: number
+    }>
+}
+
 /**
  * Save a completed session with its utterances.
  */
 export const saveSession = createServerFn({ method: 'POST' })
-    .validator(
-        (input: {
-            sourceLang: string
-            targetLang: string
-            title?: string
-            durationMs?: number
-            utterances: Array<{
-                original: string
-                translation?: string
-                timestampMs?: number
-            }>
-        }) => input,
-    )
-    .handler(async ({ data }) => {
+    .handler(async ({ data }: { data: SaveSessionInput }) => {
         const request = getRequest()
         const cookieHeader = request.headers.get('cookie') ?? ''
         const supabase = createServerSupabaseClient(cookieHeader)
@@ -87,8 +86,7 @@ export const listSessions = createServerFn({ method: 'GET' }).handler(
  * Get a single session with its utterances.
  */
 export const getSession = createServerFn({ method: 'GET' })
-    .validator((input: { sessionId: string }) => input)
-    .handler(async ({ data }) => {
+    .handler(async ({ data }: { data: { sessionId: string } }) => {
         const request = getRequest()
         const cookieHeader = request.headers.get('cookie') ?? ''
         const supabase = createServerSupabaseClient(cookieHeader)

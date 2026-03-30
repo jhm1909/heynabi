@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react'
 import { createFileRoute } from '@tanstack/react-router'
-import { useSoniox } from '#/features/stt/hooks/use-soniox'
+import { useStt } from '#/features/stt/hooks/use-stt'
 import { useTranslation } from '#/features/translation/hooks/use-translation'
 import { useSessionStore } from '#/stores/session-store'
 import { TranscriptPanel } from '#/components/session/transcript-panel'
@@ -16,15 +16,18 @@ function SessionPage() {
     const {
         sourceLang,
         targetLang,
+        sttEngine,
         setSourceLang,
         setTargetLang,
+        setSttEngine,
         isRecording,
         finalTexts,
     } = useSessionStore()
 
     const lastTranslatedCount = useRef(0)
 
-    const stt = useSoniox({
+    const stt = useStt({
+        engine: sttEngine,
         language: sourceLang,
     })
 
@@ -49,13 +52,43 @@ function SessionPage() {
         <div className="flex h-full flex-col">
             {/* Toolbar */}
             <div className="flex flex-wrap items-center justify-between gap-3 border-b p-3">
-                <LanguageSelector
-                    sourceValue={sourceLang}
-                    targetValue={targetLang}
-                    onSourceChange={setSourceLang}
-                    onTargetChange={setTargetLang}
-                    disabled={isRecording}
-                />
+                <div className="flex items-center gap-3">
+                    <LanguageSelector
+                        sourceValue={sourceLang}
+                        targetValue={targetLang}
+                        onSourceChange={setSourceLang}
+                        onTargetChange={setTargetLang}
+                        disabled={isRecording}
+                    />
+
+                    {/* STT Engine Toggle */}
+                    <div className="flex items-center gap-1.5 rounded-md border px-2 py-1 text-xs">
+                        <button
+                            type="button"
+                            className={`rounded px-2 py-0.5 transition-colors ${sttEngine === 'web-speech'
+                                    ? 'bg-primary text-primary-foreground'
+                                    : 'text-muted-foreground hover:text-foreground'
+                                }`}
+                            onClick={() => setSttEngine('web-speech')}
+                            disabled={isRecording}
+                            title="Free — Chrome built-in"
+                        >
+                            🌐 Free
+                        </button>
+                        <button
+                            type="button"
+                            className={`rounded px-2 py-0.5 transition-colors ${sttEngine === 'soniox'
+                                    ? 'bg-primary text-primary-foreground'
+                                    : 'text-muted-foreground hover:text-foreground'
+                                }`}
+                            onClick={() => setSttEngine('soniox')}
+                            disabled={isRecording}
+                            title="Premium — Soniox (requires credits)"
+                        >
+                            ⚡ Soniox
+                        </button>
+                    </div>
+                </div>
 
                 <SessionControls
                     status={stt.status}
