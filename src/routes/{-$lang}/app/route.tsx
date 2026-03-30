@@ -1,6 +1,9 @@
+import { useState } from 'react'
 import { Outlet, createFileRoute, redirect } from '@tanstack/react-router'
 import { getUser } from '#/server/auth'
-import { UserMenu } from '#/components/auth/user-menu'
+import { AppHeader } from '#/components/layout/app-header'
+import { AppSidebar } from '#/components/layout/app-sidebar'
+import { MobileNav } from '#/components/layout/mobile-nav'
 
 export const Route = createFileRoute('/{-$lang}/app')({
     beforeLoad: async () => {
@@ -17,30 +20,26 @@ export const Route = createFileRoute('/{-$lang}/app')({
 
 function AppLayout() {
     const { user } = Route.useRouteContext()
+    const [mobileNavOpen, setMobileNavOpen] = useState(false)
 
     return (
         <div className="flex h-screen flex-col">
-            {/* Header */}
-            <header className="flex h-14 items-center justify-between border-b px-4">
-                <div className="flex items-center gap-2">
-                    <span className="text-lg font-semibold">Hey Nabi 🦋</span>
-                </div>
-                <UserMenu user={user} />
-            </header>
+            <AppHeader
+                user={user}
+                onMenuToggle={() => setMobileNavOpen(true)}
+            />
 
-            {/* Body */}
             <div className="flex flex-1 overflow-hidden">
-                {/* Sidebar — will be enhanced in Story-UIFoundation */}
-                <aside className="hidden w-56 border-r md:block">
-                    <nav className="space-y-1 p-3">
-                        <p className="text-sm text-muted-foreground">Session</p>
-                    </nav>
-                </aside>
-
+                <AppSidebar />
                 <main className="flex-1 overflow-auto">
                     <Outlet />
                 </main>
             </div>
+
+            <MobileNav
+                open={mobileNavOpen}
+                onOpenChange={setMobileNavOpen}
+            />
         </div>
     )
 }
