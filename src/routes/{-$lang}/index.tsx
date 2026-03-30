@@ -1,5 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { Button } from '#/components/ui/button'
+import { LoginButton } from '#/components/auth/login-button'
+
 
 export const Route = createFileRoute('/{-$lang}/')({
     component: LandingPage,
@@ -17,9 +18,12 @@ function LandingPage() {
                 </p>
             </div>
 
-            <Button size="lg" variant="default">
-                Get Started
-            </Button>
+            <div className="flex flex-col items-center gap-3">
+                <LoginButton />
+                <p className="text-xs text-muted-foreground">
+                    Free to use • No credit card required
+                </p>
+            </div>
         </div>
     )
 }

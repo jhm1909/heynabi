@@ -1,26 +1,23 @@
-﻿[96msrc/routes/{-$lang}/app/route.tsx[0m:[93m9[0m:[93m30[0m - [91merror[0m[90m TS2820: [0mType '"/{-$lang}/"' is not assignable to type '"/{-$lang}/app" | "/{-$lang}" | "." | ".." | "/{-$lang}/app/session"'. Did you mean '"/{-$lang}"'?
+﻿[96msrc/components/auth/user-menu.tsx[0m:[93m41[0m:[93m34[0m - [91merror[0m[90m TS2322: [0mType '{ children: Element; asChild: true; }' is not assignable to type 'IntrinsicAttributes & Props<unknown>'.
+  Property 'asChild' does not exist on type 'IntrinsicAttributes & Props<unknown>'.
 
-[7m9[0m             throw redirect({ to: '/{-$lang}/' })
-[7m [0m [91m                             ~~[0m
+[7m41[0m             <DropdownMenuTrigger asChild>
+[7m  [0m [91m                                 ~~~~~~~[0m
 
-  [96mnode_modules/@tanstack/router-core/dist/esm/link.d.ts[0m:[93m112[0m:[93m5[0m
-    [7m112[0m     to: ToPathOption<TRouter, TFrom, TTo> & {};
-    [7m   [0m [96m    ~~[0m
-    The expected type comes from property 'to' which is declared here on type 'RedirectOptions<RouterCore<Route<Register, any, "/", "/", string, "__root__", undefined, {}, {}, AnyContext, AnyContext, {}, undefined, RootRouteChildren, FileRouteTypes, unknown, unknown, undefined>, "never", false, RouterHistory, Record<...>>, string, "/{-$lang}/", string, "">'
+[96msrc/routes/{-$lang}/auth/callback.tsx[0m:[93m29[0m:[93m38[0m - [91merror[0m[90m TS2345: [0mArgument of type '"/{-$lang}/auth/callback"' is not assignable to parameter of type 'keyof FileRoutesByPath | undefined'.
 
-[96msrc/server/auth.ts[0m:[93m2[0m:[93m10[0m - [91merror[0m[90m TS2724: [0m'"@tanstack/react-start/server"' has no exported member named 'getWebRequest'. Did you mean 'getRequest'?
+[7m29[0m export const Route = createFileRoute('/{-$lang}/auth/callback')({
+[7m  [0m [91m                                     ~~~~~~~~~~~~~~~~~~~~~~~~~[0m
 
-[7m2[0m import { getWebRequest } from '@tanstack/react-start/server'
-[7m [0m [91m         ~~~~~~~~~~~~~[0m
+[96msrc/routes/{-$lang}/index.tsx[0m:[93m3[0m:[93m1[0m - [91merror[0m[90m TS6133: [0m'Button' is declared but its value is never read.
 
-  [96mnode_modules/@tanstack/start-server-core/dist/esm/request-response.d.ts[0m:[93m8[0m:[93m25[0m
-    [7m8[0m export declare function getRequest(): Request;
-    [7m [0m [96m                        ~~~~~~~~~~[0m
-    'getRequest' is declared here.
+[7m3[0m import { Button } from '#/components/ui/button'
+[7m [0m [91m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
 
 
-Found 2 errors in 2 files.
+Found 3 errors in 3 files.
 
 Errors  Files
-     1  src/routes/{-$lang}/app/route.tsx[90m:9[0m
-     1  src/server/auth.ts[90m:2[0m
+     1  src/components/auth/user-menu.tsx[90m:41[0m
+     1  src/routes/{-$lang}/auth/callback.tsx[90m:29[0m
+     1  src/routes/{-$lang}/index.tsx[90m:3[0m
