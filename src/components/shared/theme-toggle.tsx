@@ -6,12 +6,14 @@ type Theme = 'light' | 'dark' | 'auto'
 
 function getResolvedTheme(mode: Theme): 'light' | 'dark' {
     if (mode === 'auto') {
+        if (typeof window === 'undefined') return 'light'
         return window.matchMedia('(prefers-color-scheme: dark)').matches
             ? 'dark'
             : 'light'
     }
     return mode
 }
+
 function applyTheme(mode: 'light' | 'dark') {
     const root = document.documentElement
     root.classList.remove('light', 'dark')
@@ -22,30 +24,30 @@ function applyTheme(mode: 'light' | 'dark') {
 
 export function ThemeToggle() {
     const [theme, setTheme] = useState<Theme>('auto')
+    const [resolved, setResolved] = useState<'light' | 'dark'>('light')
 
+    // Resolve theme on client only — avoids hydration mismatch
     useEffect(() => {
         const stored = localStorage.getItem('theme') as Theme | null
         if (stored === 'light' || stored === 'dark') {
             setTheme(stored)
+            setResolved(stored)
             applyTheme(stored)
         } else {
-            // auto mode — let CSS @media handle it, but clear any stale attributes
-            const root = document.documentElement
-            root.removeAttribute('data-theme')
-            root.classList.remove('light', 'dark')
+            const auto = getResolvedTheme('auto')
+            setResolved(auto)
         }
     }, [])
 
     const toggle = () => {
-        const resolved = getResolvedTheme(theme)
-        const next: Theme = resolved === 'dark' ? 'light' : 'dark'
+        const current = getResolvedTheme(theme)
+        const next: Theme = current === 'dark' ? 'light' : 'dark'
 
         setTheme(next)
+        setResolved(next)
         localStorage.setItem('theme', next)
         applyTheme(next)
     }
-
-    const resolved = getResolvedTheme(theme)
 
     return (
         <Button variant="ghost" size="icon" onClick={toggle}>
