@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
-import { Mic, Languages, Headphones, BookOpen, Globe, Zap, ChevronDown, Menu, X, ChevronRight } from 'lucide-react'
+import { ChevronDown, Menu, X, ChevronRight } from 'lucide-react'
 import { createClient } from '#/lib/supabase/client'
 
 /* ─── Nav Data ─── */
@@ -235,7 +235,7 @@ export function LandingNavbar() {
                                     </ul>
                                 </>
                             ) : (
-                                <a href={item.href!} className="landing-nav__mobile-link" onClick={() => setMobileOpen(false)}>
+                                <a href={item.href} className="landing-nav__mobile-link" onClick={() => setMobileOpen(false)}>
                                     {item.label}
                                 </a>
                             )}
