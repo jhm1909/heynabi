@@ -1,4 +1,3 @@
-import type { Locale } from '#/lib/i18n'
 
 const langNames: Record<string, string> = {
     ko: 'Korean',

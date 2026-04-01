@@ -1,4 +1,5 @@
-import { type Locale, defaultLocale } from './config'
+import {  defaultLocale } from './config'
+import type {Locale} from './config';
 
 type Messages = Record<string, string>
 

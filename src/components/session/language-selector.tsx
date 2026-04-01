@@ -30,6 +30,13 @@ interface LanguageSelectorProps {
     disabled?: boolean
 }
 
+/** Wraps a string-only callback to accept the nullable Base UI Select signature */
+function wrapChange(fn: (value: string) => void) {
+    return (value: string | null) => {
+        if (value !== null) fn(value)
+    }
+}
+
 export function LanguageSelector({
     sourceValue,
     targetValue,
@@ -41,7 +48,7 @@ export function LanguageSelector({
         <div className="flex items-center gap-2">
             <Select
                 value={sourceValue}
-                onValueChange={onSourceChange}
+                onValueChange={wrapChange(onSourceChange)}
                 disabled={disabled}
             >
                 <SelectTrigger className="w-36">
@@ -60,7 +67,7 @@ export function LanguageSelector({
 
             <Select
                 value={targetValue}
-                onValueChange={onTargetChange}
+                onValueChange={wrapChange(onTargetChange)}
                 disabled={disabled}
             >
                 <SelectTrigger className="w-36">

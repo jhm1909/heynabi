@@ -112,9 +112,12 @@ export function LandingNavbar() {
 
     const handleSignIn = useCallback(() => {
         const supabase = createClient()
+        const supportedLocales = new Set(['vi', 'en', 'ko', 'zh', 'ja'])
+        const firstSegment = window.location.pathname.split('/').filter(Boolean)[0] ?? ''
+        const langPrefix = supportedLocales.has(firstSegment) ? `/${firstSegment}` : ''
         supabase.auth.signInWithOAuth({
             provider: 'google',
-            options: { redirectTo: `${window.location.origin}/auth/callback` },
+            options: { redirectTo: `${window.location.origin}${langPrefix}/auth/callback` },
         })
     }, [])
 

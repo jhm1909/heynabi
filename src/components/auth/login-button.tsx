@@ -1,13 +1,16 @@
 import { Button } from '#/components/ui/button'
 import { createClient } from '#/lib/supabase/client'
 
+const SUPPORTED_LOCALES = new Set(['vi', 'en', 'ko', 'zh', 'ja'])
+
 export function LoginButton() {
     const handleLogin = () => {
         const supabase = createClient()
 
-        // Extract the optional lang prefix from the current path (e.g. "/vi", "/en")
+        // Extract and validate the lang prefix from the current path
         const pathSegments = window.location.pathname.split('/').filter(Boolean)
-        const langPrefix = pathSegments.length > 0 ? `/${pathSegments[0]}` : ''
+        const firstSegment = pathSegments[0] ?? ''
+        const langPrefix = SUPPORTED_LOCALES.has(firstSegment) ? `/${firstSegment}` : ''
 
         supabase.auth.signInWithOAuth({
             provider: 'google',

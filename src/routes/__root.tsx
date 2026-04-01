@@ -1,6 +1,5 @@
 import {
   HeadContent,
-  Link,
   Scripts,
   createRootRoute,
 } from '@tanstack/react-router'
@@ -50,9 +49,9 @@ function NotFound() {
       <p style={{ marginBottom: '2rem', opacity: 0.7 }}>
         The page you're looking for doesn't exist.
       </p>
-      <Link to="/" style={{ color: 'var(--color-primary, #6366f1)', textDecoration: 'underline' }}>
+      <a href="/" style={{ color: 'var(--color-primary, #6366f1)', textDecoration: 'underline' }}>
         Go back home
-      </Link>
+      </a>
     </div>
   )
 }

@@ -87,7 +87,7 @@ export const listSessions = createServerFn({ method: 'GET' }).handler(
 
         if (error) throw error
 
-        return data ?? []
+        return data
     },
 )
 
@@ -102,10 +102,16 @@ export const getSession = createServerFn({ method: 'GET' })
         const cookieHeader = request.headers.get('cookie') ?? ''
         const supabase = createServerSupabaseClient(cookieHeader)
 
+        const {
+            data: { user },
+        } = await supabase.auth.getUser()
+        if (!user) throw new Error('Unauthorized')
+
         const { data: session, error: sessionError } = await supabase
             .from('sessions')
             .select('*')
             .eq('id', data.sessionId)
+            .eq('user_id', user.id)
             .single()
 
         if (sessionError) throw sessionError
@@ -118,5 +124,5 @@ export const getSession = createServerFn({ method: 'GET' })
 
         if (uttError) throw uttError
 
-        return { session, utterances: utterances ?? [] }
+        return { session, utterances: utterances }
     })

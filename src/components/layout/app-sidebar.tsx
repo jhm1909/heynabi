@@ -3,9 +3,9 @@ import { Mic, History, Settings } from 'lucide-react'
 import { cn } from '#/lib/utils'
 
 const navItems = [
-    { href: '/app/session', icon: Mic, label: 'Session' },
-    { href: '/app/history', icon: History, label: 'History' },
-    { href: '/app/settings', icon: Settings, label: 'Settings' },
+    { href: '/{-$lang}/app/session' as const, icon: Mic, label: 'Session' },
+    { href: '/{-$lang}/app/history' as const, icon: History, label: 'History' },
+    { href: '/{-$lang}/app/settings' as const, icon: Settings, label: 'Settings' },
 ]
 
 export function AppSidebar() {
@@ -15,11 +15,11 @@ export function AppSidebar() {
         <aside className="hidden w-56 shrink-0 border-r bg-muted/30 md:block">
             <nav className="flex flex-col gap-1 p-3">
                 {navItems.map((item) => {
-                    const isActive = location.pathname.includes(item.href)
+                    const isActive = location.pathname.includes(item.href.replace('/{-$lang}', ''))
                     return (
-                        <a
+                        <Link
                             key={item.href}
-                            href={item.href}
+                            to={item.href}
                             className={cn(
                                 'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors',
                                 isActive
@@ -29,7 +29,7 @@ export function AppSidebar() {
                         >
                             <item.icon className="h-4 w-4" />
                             {item.label}
-                        </a>
+                        </Link>
                     )
                 })}
             </nav>

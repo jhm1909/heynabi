@@ -18,10 +18,16 @@ export const exportSessionTxt = createServerFn({ method: 'POST' })
         const cookieHeader = request.headers.get('cookie') ?? ''
         const supabase = createServerSupabaseClient(cookieHeader)
 
+        const {
+            data: { user },
+        } = await supabase.auth.getUser()
+        if (!user) throw new Error('Unauthorized')
+
         const { data: session } = await supabase
             .from('sessions')
             .select('*')
             .eq('id', data.sessionId)
+            .eq('user_id', user.id)
             .single()
 
         if (!session) throw new Error('Session not found')
@@ -63,6 +69,20 @@ export const exportSessionSrt = createServerFn({ method: 'POST' })
         const cookieHeader = request.headers.get('cookie') ?? ''
         const supabase = createServerSupabaseClient(cookieHeader)
 
+        const {
+            data: { user },
+        } = await supabase.auth.getUser()
+        if (!user) throw new Error('Unauthorized')
+
+        // Verify session ownership
+        const { data: session } = await supabase
+            .from('sessions')
+            .select('id')
+            .eq('id', data.sessionId)
+            .eq('user_id', user.id)
+            .single()
+        if (!session) throw new Error('Session not found')
+
         const { data: utterances } = await supabase
             .from('utterances')
             .select('*')
@@ -71,15 +91,15 @@ export const exportSessionSrt = createServerFn({ method: 'POST' })
 
         const lines: string[] = []
 
-            ; (utterances ?? []).forEach((u, i) => {
-                const startMs = u.timestamp_ms ?? i * 5000
-                const endMs = startMs + 4000
+        for (const [i, u] of (utterances ?? []).entries()) {
+            const startMs = u.timestamp_ms ?? i * 5000
+            const endMs = startMs + 4000
 
-                lines.push(`${i + 1}`)
-                lines.push(`${formatSrtTime(startMs)} --> ${formatSrtTime(endMs)}`)
-                lines.push(u.translation ?? u.original)
-                lines.push('')
-            })
+            lines.push(`${i + 1}`)
+            lines.push(`${formatSrtTime(startMs)} --> ${formatSrtTime(endMs)}`)
+            lines.push(u.translation ?? u.original)
+            lines.push('')
+        }
 
         return { content: lines.join('\n'), filename: `session-${data.sessionId}.srt` }
     })

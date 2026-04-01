@@ -29,10 +29,15 @@ export function useWebSpeech(options: UseWebSpeechOptions = {}) {
 
     const recognitionRef = useRef<SpeechRecognition | null>(null)
     const languageRef = useRef(language)
+    const statusRef = useRef<SttStatus>(status)
 
     useEffect(() => {
         languageRef.current = language
     }, [language])
+
+    useEffect(() => {
+        statusRef.current = status
+    }, [status])
 
     const store = useSessionStore()
 
@@ -46,7 +51,8 @@ export function useWebSpeech(options: UseWebSpeechOptions = {}) {
 
     const start = useCallback(async () => {
         try {
-            // Check browser support
+            // Check browser support — runtime feature detection
+            /* eslint-disable @typescript-eslint/no-unnecessary-condition */
             const SpeechRecognition =
                 window.SpeechRecognition || window.webkitSpeechRecognition
             if (!SpeechRecognition) {
@@ -54,6 +60,7 @@ export function useWebSpeech(options: UseWebSpeechOptions = {}) {
                 setStatus('error')
                 return
             }
+            /* eslint-enable @typescript-eslint/no-unnecessary-condition */
 
             setStatus('connecting')
             setError(null)
@@ -110,7 +117,7 @@ export function useWebSpeech(options: UseWebSpeechOptions = {}) {
 
             recognition.onend = () => {
                 // Auto-restart if still recording (Web Speech API stops after silence)
-                if (status === 'recording' && recognitionRef.current) {
+                if (statusRef.current === 'recording' && recognitionRef.current) {
                     try {
                         recognition.start()
                     } catch {

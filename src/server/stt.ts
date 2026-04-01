@@ -1,4 +1,6 @@
 import { createServerFn } from '@tanstack/react-start'
+import { getRequest } from '@tanstack/react-start/server'
+import { createServerSupabaseClient } from '#/lib/supabase/server'
 
 /**
  * Generate a temporary Soniox API key for browser WebSocket auth.
@@ -9,7 +11,14 @@ import { createServerFn } from '@tanstack/react-start'
  */
 export const getSonioxToken = createServerFn({ method: 'GET' }).handler(
     async () => {
-        const apiKey = import.meta.env.SONIOX_API_KEY
+        // Auth check — prevent unauthenticated API abuse
+        const request = getRequest()
+        const cookieHeader = request.headers.get('cookie') ?? ''
+        const supabase = createServerSupabaseClient(cookieHeader)
+        const { data: { user } } = await supabase.auth.getUser()
+        if (!user) throw new Error('Unauthorized')
+
+        const apiKey = process.env.SONIOX_API_KEY
 
         if (!apiKey || apiKey === 'placeholder') {
             throw new Error('SONIOX_API_KEY is not configured')
@@ -35,14 +44,19 @@ export const getSonioxToken = createServerFn({ method: 'GET' }).handler(
                 return { apiKey: data.api_key ?? data.key ?? data.token }
             }
 
-            // If temp key endpoint doesn't exist, fall back to direct key
-            // This is acceptable for development but NOT for production
-            console.warn('Soniox temp key API unavailable, using direct key (dev only)')
-            return { apiKey }
-        } catch {
-            // Fallback: return direct key for development
-            console.warn('Soniox temp key generation failed, using direct key (dev only)')
-            return { apiKey }
+            // Only allow direct key fallback in development
+            if (process.env.NODE_ENV === 'development') {
+                console.warn('[DEV ONLY] Soniox temp key API unavailable, using direct key')
+                return { apiKey }
+            }
+
+            throw new Error('Failed to generate temporary Soniox key')
+        } catch (err) {
+            if (process.env.NODE_ENV === 'development') {
+                console.warn('[DEV ONLY] Soniox temp key generation failed, using direct key')
+                return { apiKey }
+            }
+            throw err instanceof Error ? err : new Error('Soniox key generation failed')
         }
     },
 )

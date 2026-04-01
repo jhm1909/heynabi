@@ -8,8 +8,9 @@ import viteReact from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 
 const config = defineConfig({
-  // Allow server-side env vars (SONIOX_, GEMINI_, AUTH_) alongside VITE_
-  envPrefix: ['VITE_', 'SONIOX_', 'GEMINI_', 'AUTH_', 'GOOGLE_'],
+  // Only VITE_ vars are exposed to the client bundle.
+  // Server-only vars (SONIOX_, GEMINI_, GOOGLE_) are accessed via process.env in server functions.
+  envPrefix: ['VITE_'],
   plugins: [
     devtools(),
     tsconfigPaths({ projects: ['./tsconfig.json'] }),
