@@ -21,16 +21,22 @@ export const Route = createFileRoute('/{-$lang}/app')({
 function AppLayout() {
     const { user } = Route.useRouteContext()
     const [mobileNavOpen, setMobileNavOpen] = useState(false)
+    const [sidebarOpen, setSidebarOpen] = useState(true)
 
     return (
-        <div className="flex h-screen flex-col">
+        <div className="relative flex h-screen flex-col">
             <AppHeader
                 user={user}
                 onMenuToggle={() => setMobileNavOpen(true)}
+                onSidebarToggle={() => setSidebarOpen((p) => !p)}
+                sidebarOpen={sidebarOpen}
             />
 
             <div className="flex flex-1 overflow-hidden">
-                <AppSidebar />
+                <AppSidebar
+                    open={sidebarOpen}
+                    onClose={() => setSidebarOpen(false)}
+                />
                 <main className="flex-1 overflow-auto">
                     <Outlet />
                 </main>

@@ -22,15 +22,15 @@ function applyTheme(mode: 'light' | 'dark') {
     root.style.colorScheme = mode
 }
 
-export function ThemeToggle() {
-    const [theme, setTheme] = useState<Theme>('auto')
+/**
+ * Reusable hook for reading and setting the theme.
+ */
+export function useTheme() {
     const [resolved, setResolved] = useState<'light' | 'dark'>('light')
 
-    // Resolve theme on client only — avoids hydration mismatch
     useEffect(() => {
-        const stored = localStorage.getItem('theme') as Theme | null
+        const stored = localStorage.getItem('theme') as 'light' | 'dark' | null
         if (stored === 'light' || stored === 'dark') {
-            setTheme(stored)
             setResolved(stored)
             applyTheme(stored)
         } else {
@@ -39,19 +39,25 @@ export function ThemeToggle() {
         }
     }, [])
 
-    const toggle = () => {
-        const current = getResolvedTheme(theme)
-        const next: Theme = current === 'dark' ? 'light' : 'dark'
-
-        setTheme(next)
+    const setTheme = (next: 'light' | 'dark') => {
         setResolved(next)
         localStorage.setItem('theme', next)
         applyTheme(next)
     }
 
+    return { theme: resolved, setTheme }
+}
+
+export function ThemeToggle() {
+    const { theme, setTheme } = useTheme()
+
+    const toggle = () => {
+        setTheme(theme === 'dark' ? 'light' : 'dark')
+    }
+
     return (
         <Button variant="ghost" size="icon" onClick={toggle}>
-            {resolved === 'dark' ? (
+            {theme === 'dark' ? (
                 <Sun className="h-4 w-4" />
             ) : (
                 <Moon className="h-4 w-4" />

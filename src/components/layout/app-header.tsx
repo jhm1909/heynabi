@@ -1,4 +1,5 @@
 
+import { PanelLeftClose, PanelLeftOpen, Menu } from 'lucide-react'
 import { ThemeToggle } from '#/components/shared/theme-toggle'
 import { UserMenu } from '#/components/auth/user-menu'
 
@@ -11,11 +12,14 @@ interface AppHeaderProps {
         }
     }
     onMenuToggle?: () => void
+    onSidebarToggle?: () => void
+    sidebarOpen?: boolean
 }
 
-export function AppHeader({ user, onMenuToggle }: AppHeaderProps) {
+export function AppHeader({ user, onMenuToggle, onSidebarToggle, sidebarOpen }: AppHeaderProps) {
     return (
-        <header className="flex h-14 shrink-0 items-center justify-between border-b bg-background/95 px-4 backdrop-blur supports-backdrop-filter:bg-background/60">
+        <header className="sticky top-0 z-30 flex h-14 shrink-0 items-center justify-between px-4 backdrop-blur-sm"
+        >
             <div className="flex items-center gap-3">
                 {/* Mobile hamburger */}
                 <button
@@ -23,19 +27,19 @@ export function AppHeader({ user, onMenuToggle }: AppHeaderProps) {
                     onClick={onMenuToggle}
                     aria-label="Toggle menu"
                 >
-                    <svg
-                        className="h-5 w-5"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                    >
-                        <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M4 6h16M4 12h16M4 18h16"
-                        />
-                    </svg>
+                    <Menu className="h-5 w-5" />
+                </button>
+
+                {/* Desktop sidebar toggle */}
+                <button
+                    className="hidden rounded-lg p-1.5 text-muted-foreground transition-colors hover:bg-white/20 hover:text-foreground md:block"
+                    onClick={onSidebarToggle}
+                    aria-label={sidebarOpen ? 'Close sidebar' : 'Open sidebar'}
+                >
+                    {sidebarOpen
+                        ? <PanelLeftClose className="h-4 w-4" />
+                        : <PanelLeftOpen className="h-4 w-4" />
+                    }
                 </button>
 
                 <span className="text-lg font-semibold tracking-tight">
