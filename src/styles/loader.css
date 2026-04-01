@@ -1,0 +1,68 @@
+/* ─── 3D Diamond Loader (inspired by UIverse) ─── */
+.loader-3d-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    padding: 3rem 0;
+}
+
+.loader-3d-container {
+    width: 120px;
+    height: 120px;
+    position: relative;
+    transform-style: preserve-3d;
+    transform: perspective(500px) rotateX(60deg);
+}
+
+.loader-3d-container .aro {
+    position: absolute;
+    inset: calc(var(--s) * 5px);
+    box-shadow: inset 0 0 50px var(--lagoon);
+    clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+    animation: loader-3d-strim 3s infinite ease-in-out both;
+    animation-delay: calc(var(--s) * -0.1s);
+    border: 1px solid color-mix(in oklab, var(--lagoon) 30%, transparent);
+}
+
+.loader-3d-label {
+    font-size: 0.875rem;
+    color: var(--sea-ink-soft);
+    font-weight: 500;
+    letter-spacing: 0.02em;
+}
+
+@keyframes loader-3d-strim {
+
+    0%,
+    100% {
+        transform: translateZ(-60px) rotate(0deg);
+        box-shadow: inset 0 0 50px var(--lagoon);
+    }
+
+    50% {
+        transform: translateZ(60px) rotate(90deg);
+        box-shadow: inset 0 0 50px var(--lagoon-deep);
+    }
+}
+
+/* Size variants */
+.loader-3d-container.sm {
+    width: 60px;
+    height: 60px;
+}
+
+.loader-3d-container.sm .aro {
+    inset: calc(var(--s) * 3px);
+    box-shadow: inset 0 0 30px var(--lagoon);
+}
+
+.loader-3d-container.lg {
+    width: 180px;
+    height: 180px;
+}
+
+.loader-3d-container.lg .aro {
+    inset: calc(var(--s) * 7px);
+}

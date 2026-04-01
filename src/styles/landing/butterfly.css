@@ -1,0 +1,763 @@
+﻿/* ??? 3D Flapping Butterfly ??organic flight path ??? */
+
+/* Anchor point ??centered on the hero text, no rotation */
+.hero-brand-orbit {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  z-index: 4;
+  pointer-events: none;
+}
+
+/* The butterfly ??natural flight with trail & shimmer */
+.hero-butterfly {
+  --btf-size: 30px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: var(--btf-size);
+  height: var(--btf-size);
+  position: absolute;
+  top: calc(var(--btf-size) / -2);
+  left: calc(var(--btf-size) / -2);
+  animation:
+    butterfly-wander 20s ease-in-out infinite,
+    butterfly-flutter 1.8s ease-in-out infinite,
+    butterfly-depth 20s ease-in-out infinite;
+}
+
+/* Sparkle trail ??two fading dots that follow behind */
+.hero-butterfly::before,
+.hero-butterfly::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.hero-butterfly::before {
+  width: 4px;
+  height: 4px;
+  background: rgba(164, 228, 206, 0.7);
+  top: 50%;
+  left: 50%;
+  box-shadow: 0 0 6px 2px rgba(79, 184, 178, 0.4);
+  animation: sparkle-pulse 1.2s ease-in-out infinite;
+}
+
+.hero-butterfly::after {
+  width: 3px;
+  height: 3px;
+  background: rgba(79, 184, 178, 0.5);
+  top: 60%;
+  left: 40%;
+  box-shadow: 0 0 4px 1px rgba(79, 184, 178, 0.3);
+  animation: sparkle-pulse 1.2s ease-in-out infinite 0.6s;
+}
+
+@keyframes sparkle-pulse {
+
+  0%,
+  100% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+
+  30% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+
+  70% {
+    opacity: 0.6;
+    transform: scale(0.8);
+  }
+}
+
+/* ??? Falling glow particles ??gently drift downward from butterfly ??? */
+.btf-particle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: rgba(164, 228, 206, 0.9);
+  box-shadow:
+    0 0 5px 2px rgba(79, 184, 178, 0.5),
+    0 0 10px 3px rgba(164, 228, 206, 0.15);
+  pointer-events: none;
+  opacity: 0;
+  animation-duration: 3s;
+  animation-timing-function: ease-out;
+  animation-iteration-count: infinite;
+  animation-delay: calc(var(--i) * 0.5s);
+}
+
+/* Vary sizes ??some big, some tiny */
+.btf-particle:nth-child(n+5):nth-child(-n+6) {
+  width: 4px;
+  height: 4px;
+}
+
+.btf-particle:nth-child(n+7):nth-child(-n+8) {
+  width: 2px;
+  height: 2px;
+}
+
+.btf-particle:nth-child(n+9) {
+  width: 2.5px;
+  height: 2.5px;
+}
+
+/* Each particle falls with unique horizontal drift */
+.btf-particle:nth-child(n+4) {
+  animation-name: particle-fall-0;
+}
+
+.btf-particle:nth-child(n+5) {
+  animation-name: particle-fall-1;
+}
+
+.btf-particle:nth-child(n+6) {
+  animation-name: particle-fall-2;
+}
+
+.btf-particle:nth-child(n+7) {
+  animation-name: particle-fall-3;
+}
+
+.btf-particle:nth-child(n+8) {
+  animation-name: particle-fall-4;
+}
+
+.btf-particle:nth-child(n+9) {
+  animation-name: particle-fall-5;
+}
+
+/* Particle 0 ??drifts right */
+@keyframes particle-fall-0 {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) scale(0.3);
+  }
+
+  8% {
+    opacity: 0.9;
+    transform: translate(1px, 2px) scale(1);
+  }
+
+  50% {
+    opacity: 0.5;
+    transform: translate(8px, 25px) scale(0.7);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(12px, 50px) scale(0);
+  }
+}
+
+/* Particle 1 ??drifts left */
+@keyframes particle-fall-1 {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) scale(0.3);
+  }
+
+  8% {
+    opacity: 0.8;
+    transform: translate(-1px, 3px) scale(1);
+  }
+
+  50% {
+    opacity: 0.4;
+    transform: translate(-10px, 22px) scale(0.6);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(-15px, 45px) scale(0);
+  }
+}
+
+/* Particle 2 ??drifts slightly right, slow */
+@keyframes particle-fall-2 {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) scale(0.3);
+  }
+
+  10% {
+    opacity: 1;
+    transform: translate(2px, 2px) scale(1);
+  }
+
+  60% {
+    opacity: 0.5;
+    transform: translate(5px, 30px) scale(0.8);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(6px, 55px) scale(0);
+  }
+}
+
+/* Particle 3 ??zigzag drift left */
+@keyframes particle-fall-3 {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) scale(0.3);
+  }
+
+  8% {
+    opacity: 0.7;
+    transform: translate(-2px, 3px) scale(1);
+  }
+
+  30% {
+    opacity: 0.6;
+    transform: translate(3px, 15px) scale(0.85);
+  }
+
+  60% {
+    opacity: 0.3;
+    transform: translate(-6px, 32px) scale(0.5);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(-8px, 48px) scale(0);
+  }
+}
+
+/* Particle 4 ??straight down, gentle */
+@keyframes particle-fall-4 {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) scale(0.3);
+  }
+
+  10% {
+    opacity: 0.85;
+    transform: translate(0, 3px) scale(1);
+  }
+
+  50% {
+    opacity: 0.45;
+    transform: translate(2px, 28px) scale(0.7);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(3px, 55px) scale(0);
+  }
+}
+
+/* Particle 5 ??drift far left, slow sway */
+@keyframes particle-fall-5 {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) scale(0.3);
+  }
+
+  8% {
+    opacity: 0.75;
+    transform: translate(1px, 2px) scale(1);
+  }
+
+  35% {
+    opacity: 0.55;
+    transform: translate(-5px, 18px) scale(0.8);
+  }
+
+  65% {
+    opacity: 0.25;
+    transform: translate(2px, 35px) scale(0.5);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(-10px, 52px) scale(0);
+  }
+}
+
+/* Opacity + glow depth ??fades when "far", glows when "close" */
+@keyframes butterfly-depth {
+  0% {
+    opacity: 0.85;
+    filter: drop-shadow(0 2px 6px rgba(79, 184, 178, 0.25));
+  }
+
+  9% {
+    opacity: 0.65;
+    filter: drop-shadow(0 1px 3px rgba(79, 184, 178, 0.15));
+  }
+
+  15% {
+    opacity: 0.55;
+    filter: drop-shadow(0 1px 2px rgba(79, 184, 178, 0.1));
+  }
+
+  29% {
+    opacity: 0.7;
+    filter: drop-shadow(0 2px 4px rgba(79, 184, 178, 0.2));
+  }
+
+  41% {
+    opacity: 0.85;
+    filter: drop-shadow(0 3px 8px rgba(79, 184, 178, 0.3));
+  }
+
+  50% {
+    opacity: 1;
+    filter: drop-shadow(0 4px 12px rgba(79, 184, 178, 0.5));
+  }
+
+  60% {
+    opacity: 0.9;
+    filter: drop-shadow(0 3px 8px rgba(79, 184, 178, 0.35));
+  }
+
+  76% {
+    opacity: 0.8;
+    filter: drop-shadow(0 2px 6px rgba(79, 184, 178, 0.25));
+  }
+
+  100% {
+    opacity: 0.85;
+    filter: drop-shadow(0 2px 6px rgba(79, 184, 178, 0.25));
+  }
+}
+
+/* Wing color shimmer ??iridescent teal shift */
+.hero-butterfly svg path {
+  animation: wing-shimmer 6s ease-in-out infinite;
+}
+
+@keyframes wing-shimmer {
+
+  0%,
+  100% {
+    fill: #2a7c76;
+  }
+
+  25% {
+    fill: #3da89f;
+  }
+
+  50% {
+    fill: #4fb8b2;
+  }
+
+  75% {
+    fill: #3da89f;
+  }
+}
+
+/* Flight path ??wide exploration, figure-8, dramatic swoops */
+@keyframes butterfly-wander {
+
+  /* Start: right side */
+  0% {
+    transform: translate(75px, -10px) rotate(-5deg) scale(1);
+  }
+
+  /* Rise & arc upward */
+  3% {
+    transform: translate(80px, -30px) rotate(-15deg) scale(0.97);
+  }
+
+  7% {
+    transform: translate(60px, -55px) rotate(-28deg) scale(0.92);
+  }
+
+  /* Sweep across top ??small, far away */
+  12% {
+    transform: translate(15px, -65px) rotate(-18deg) scale(0.85);
+  }
+
+  16% {
+    transform: translate(-25px, -58px) rotate(-3deg) scale(0.87);
+  }
+
+  /* Descend left side */
+  20% {
+    transform: translate(-55px, -38px) rotate(10deg) scale(0.9);
+  }
+
+  /* ?? Hover/explore left ?? */
+  24% {
+    transform: translate(-68px, -25px) rotate(15deg) scale(0.93);
+  }
+
+  26% {
+    transform: translate(-70px, -22px) rotate(12deg) scale(0.93);
+  }
+
+  /* Drop down dramatically */
+  30% {
+    transform: translate(-78px, 5px) rotate(25deg) scale(0.97);
+  }
+
+  34% {
+    transform: translate(-60px, 30px) rotate(18deg) scale(1.02);
+  }
+
+  /* Swoop low under text ??big & close */
+  38% {
+    transform: translate(-25px, 50px) rotate(8deg) scale(1.06);
+  }
+
+  /* ?? Fast dart across bottom ?? */
+  40% {
+    transform: translate(-5px, 55px) rotate(-2deg) scale(1.08);
+  }
+
+  42% {
+    transform: translate(20px, 52px) rotate(-10deg) scale(1.1);
+  }
+
+  /* Rise up through center ??figure-8 crossover */
+  46% {
+    transform: translate(35px, 30px) rotate(-18deg) scale(1.05);
+  }
+
+  49% {
+    transform: translate(15px, 5px) rotate(-25deg) scale(1);
+  }
+
+  /* Second loop: drift up-left */
+  53% {
+    transform: translate(-10px, -20px) rotate(-15deg) scale(0.95);
+  }
+
+  57% {
+    transform: translate(-35px, -40px) rotate(-5deg) scale(0.9);
+  }
+
+  /* ?? Quick circle/spiral near text ?? */
+  60% {
+    transform: translate(-15px, -30px) rotate(12deg) scale(0.92);
+  }
+
+  62% {
+    transform: translate(5px, -25px) rotate(20deg) scale(0.95);
+  }
+
+  64% {
+    transform: translate(15px, -35px) rotate(5deg) scale(0.93);
+  }
+
+  /* Drift right, descending gently */
+  68% {
+    transform: translate(45px, -20px) rotate(-10deg) scale(0.96);
+  }
+
+  72% {
+    transform: translate(65px, -5px) rotate(-15deg) scale(0.98);
+  }
+
+  /* ?? Lazy glide right ?? */
+  77% {
+    transform: translate(80px, 5px) rotate(-8deg) scale(1);
+  }
+
+  80% {
+    transform: translate(85px, 0px) rotate(-5deg) scale(0.99);
+  }
+
+  /* ?? Hover/rest near start ?? */
+  84% {
+    transform: translate(82px, -5px) rotate(-6deg) scale(0.98);
+  }
+
+  86% {
+    transform: translate(83px, -4px) rotate(-7deg) scale(0.98);
+  }
+
+  /* Small goodbye flutter up */
+  90% {
+    transform: translate(80px, -15px) rotate(-10deg) scale(0.99);
+  }
+
+  94% {
+    transform: translate(78px, -18px) rotate(-8deg) scale(1);
+  }
+
+  /* Ease home */
+  97% {
+    transform: translate(76px, -14px) rotate(-6deg) scale(1);
+  }
+
+  100% {
+    transform: translate(75px, -10px) rotate(-5deg) scale(1);
+  }
+}
+
+/* Fast flutter wobble ??independent vertical jitter like wing-beats pushing air */
+@keyframes butterfly-flutter {
+
+  0%,
+  100% {
+    margin-top: 0;
+  }
+
+  12% {
+    margin-top: -5px;
+  }
+
+  24% {
+    margin-top: 1px;
+  }
+
+  36% {
+    margin-top: -7px;
+  }
+
+  48% {
+    margin-top: 0;
+  }
+
+  58% {
+    margin-top: -4px;
+  }
+
+  70% {
+    margin-top: 2px;
+  }
+
+  82% {
+    margin-top: -6px;
+  }
+
+  92% {
+    margin-top: 0;
+  }
+}
+
+/* Left wing ??fast, with asymmetric beat */
+.hero-butterfly svg:nth-child(1) {
+  position: relative;
+  height: 100%;
+  left: 2%;
+  transform-origin: center right;
+  animation: wing-flap-left 0.35s ease-in-out infinite;
+}
+
+/* Body */
+.hero-butterfly svg:nth-child(2) {
+  height: 50%;
+}
+
+/* Right wing ??offset timing for realistic asymmetry */
+.hero-butterfly svg:nth-child(3) {
+  position: relative;
+  height: 100%;
+  left: -2%;
+  transform-origin: center left;
+  animation: wing-flap-right 0.35s ease-in-out infinite;
+}
+
+/* Left wing beats slightly ahead */
+@keyframes wing-flap-left {
+
+  0%,
+  100% {
+    transform: rotateY(0deg);
+  }
+
+  40% {
+    transform: rotateY(78deg);
+  }
+}
+
+/* Right wing beats slightly behind */
+@keyframes wing-flap-right {
+
+  0%,
+  100% {
+    transform: rotateY(0deg);
+  }
+
+  60% {
+    transform: rotateY(78deg);
+  }
+}
+
+@media (min-width: 640px) {
+  .hero-butterfly {
+    --btf-size: 34px;
+  }
+
+  @keyframes butterfly-wander {
+    0% {
+      transform: translate(105px, -14px) rotate(-5deg) scale(1);
+    }
+
+    3% {
+      transform: translate(112px, -42px) rotate(-15deg) scale(0.97);
+    }
+
+    7% {
+      transform: translate(84px, -77px) rotate(-28deg) scale(0.92);
+    }
+
+    12% {
+      transform: translate(21px, -90px) rotate(-18deg) scale(0.83);
+    }
+
+    16% {
+      transform: translate(-35px, -80px) rotate(-3deg) scale(0.85);
+    }
+
+    20% {
+      transform: translate(-77px, -53px) rotate(10deg) scale(0.88);
+    }
+
+    24% {
+      transform: translate(-95px, -35px) rotate(15deg) scale(0.91);
+    }
+
+    26% {
+      transform: translate(-98px, -31px) rotate(12deg) scale(0.91);
+    }
+
+    30% {
+      transform: translate(-109px, 7px) rotate(25deg) scale(0.96);
+    }
+
+    34% {
+      transform: translate(-84px, 42px) rotate(18deg) scale(1.02);
+    }
+
+    38% {
+      transform: translate(-35px, 70px) rotate(8deg) scale(1.06);
+    }
+
+    40% {
+      transform: translate(-7px, 77px) rotate(-2deg) scale(1.08);
+    }
+
+    42% {
+      transform: translate(28px, 73px) rotate(-10deg) scale(1.1);
+    }
+
+    46% {
+      transform: translate(49px, 42px) rotate(-18deg) scale(1.05);
+    }
+
+    49% {
+      transform: translate(21px, 7px) rotate(-25deg) scale(1);
+    }
+
+    53% {
+      transform: translate(-14px, -28px) rotate(-15deg) scale(0.95);
+    }
+
+    57% {
+      transform: translate(-49px, -56px) rotate(-5deg) scale(0.88);
+    }
+
+    60% {
+      transform: translate(-21px, -42px) rotate(12deg) scale(0.9);
+    }
+
+    62% {
+      transform: translate(7px, -35px) rotate(20deg) scale(0.93);
+    }
+
+    64% {
+      transform: translate(21px, -49px) rotate(5deg) scale(0.91);
+    }
+
+    68% {
+      transform: translate(63px, -28px) rotate(-10deg) scale(0.95);
+    }
+
+    72% {
+      transform: translate(91px, -7px) rotate(-15deg) scale(0.97);
+    }
+
+    77% {
+      transform: translate(112px, 7px) rotate(-8deg) scale(1);
+    }
+
+    80% {
+      transform: translate(119px, 0px) rotate(-5deg) scale(0.99);
+    }
+
+    84% {
+      transform: translate(115px, -7px) rotate(-6deg) scale(0.98);
+    }
+
+    86% {
+      transform: translate(116px, -6px) rotate(-7deg) scale(0.98);
+    }
+
+    90% {
+      transform: translate(112px, -21px) rotate(-10deg) scale(0.99);
+    }
+
+    94% {
+      transform: translate(109px, -25px) rotate(-8deg) scale(1);
+    }
+
+    97% {
+      transform: translate(107px, -20px) rotate(-6deg) scale(1);
+    }
+
+    100% {
+      transform: translate(105px, -14px) rotate(-5deg) scale(1);
+    }
+  }
+}
+
+/* Footer butterfly ??flaps in place, no wandering */
+.footer-butterfly {
+  --btf-size: 28px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: var(--btf-size);
+  height: var(--btf-size);
+  filter: drop-shadow(0 2px 6px rgba(79, 184, 178, 0.3));
+  animation: footer-bob 2.5s ease-in-out infinite;
+}
+
+.footer-butterfly svg:nth-child(1) {
+  position: relative;
+  height: 100%;
+  left: 2%;
+  transform-origin: center right;
+  animation: wing-flap-left 0.5s ease-in-out infinite;
+}
+
+.footer-butterfly svg:nth-child(2) {
+  height: 50%;
+}
+
+.footer-butterfly svg:nth-child(3) {
+  position: relative;
+  height: 100%;
+  left: -2%;
+  transform-origin: center left;
+  animation: wing-flap-right 0.5s ease-in-out infinite;
+}
+
+@keyframes footer-bob {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-4px);
+  }
+}

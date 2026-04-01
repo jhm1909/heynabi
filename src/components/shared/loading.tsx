@@ -1,10 +1,28 @@
-import { Loader2 } from 'lucide-react'
+import type { CSSProperties } from 'react'
 
-export function Loading({ text = 'Loading...' }: { text?: string }) {
+const RING_COUNT = 12
+
+type LoaderSize = 'sm' | 'md' | 'lg'
+
+export function Loading({
+    text = 'Loading...',
+    size = 'md',
+}: {
+    text?: string
+    size?: LoaderSize
+}) {
     return (
-        <div className="flex flex-col items-center justify-center gap-3 py-12">
-            <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-            <p className="text-sm text-muted-foreground">{text}</p>
+        <div className="loader-3d-wrap">
+            <div className={`loader-3d-container ${size === 'md' ? '' : size}`}>
+                {Array.from({ length: RING_COUNT }, (_, i) => (
+                    <div
+                        key={i}
+                        className="aro"
+                        style={{ '--s': i } as CSSProperties}
+                    />
+                ))}
+            </div>
+            {text && <span className="loader-3d-label">{text}</span>}
         </div>
     )
 }

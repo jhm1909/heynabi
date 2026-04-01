@@ -1,4 +1,4 @@
-import { Mic, History, Settings, X } from 'lucide-react'
+import { Mic, History, Settings } from 'lucide-react'
 import { useLocation } from '@tanstack/react-router'
 import {
     Sheet,

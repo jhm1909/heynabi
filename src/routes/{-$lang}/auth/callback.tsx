@@ -1,6 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
 import { createClient } from '#/lib/supabase/client'
+import { Loading } from '#/components/shared/loading'
 
 export const Route = createFileRoute('/{-$lang}/auth/callback')({
     component: AuthCallback,
@@ -52,10 +53,7 @@ function AuthCallback() {
 
     return (
         <div className="flex min-h-screen items-center justify-center">
-            <div className="flex flex-col items-center gap-3">
-                <div className="h-8 w-8 animate-spin rounded-full border-4 border-(--lagoon-deep) border-t-transparent" />
-                <p className="text-muted-foreground">{status}</p>
-            </div>
+            <Loading text={status} />
         </div>
     )
 }

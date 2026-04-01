@@ -1,0 +1,153 @@
+﻿/* ??? Landing page hero typography ??? */
+.hero-display {
+  font-family: "Fraunces", Georgia, serif;
+  font-size: clamp(2.8rem, 6vw, 5rem);
+  font-weight: 700;
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+}
+
+/* ??? Animated "Hey Nabi" kicker ??DRAMATIC ??? */
+.hero-brand {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.1em;
+  font-family: "Fraunces", Georgia, serif;
+  font-size: clamp(2.2rem, 4vw, 3.5rem);
+  font-weight: 800;
+  user-select: none;
+  letter-spacing: 0.01em;
+  padding: 0.4em 0.8em;
+  color: var(--lagoon-deep);
+}
+
+/* Pulsing glow aura behind the text */
+.hero-brand::before {
+  content: "";
+  position: absolute;
+  inset: -8px -16px;
+  border-radius: 2rem;
+  background: radial-gradient(ellipse at center,
+      rgba(79, 184, 178, 0.25) 0%,
+      rgba(79, 184, 178, 0.08) 40%,
+      transparent 70%);
+  filter: blur(20px);
+  animation: hero-aura-pulse 3s ease-in-out infinite;
+  z-index: -1;
+}
+
+@keyframes hero-aura-pulse {
+
+  0%,
+  100% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.15);
+  }
+}
+
+/* Shimmer bar under text */
+.hero-brand-sweep {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  width: 100%;
+  border-radius: 2px;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.hero-brand-sweep::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(90deg,
+      transparent 0%,
+      rgba(79, 184, 178, 0.4) 20%,
+      rgba(164, 228, 206, 0.9) 50%,
+      rgba(79, 184, 178, 0.4) 80%,
+      transparent 100%);
+  animation: hero-shimmer-slide 3s ease-in-out infinite;
+}
+
+@keyframes hero-shimmer-slide {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(450%);
+  }
+}
+
+/* Each letter ??ALWAYS VISIBLE, periodic glow pulse */
+.hero-brand-letter {
+  display: inline-block;
+  opacity: 1;
+  animation: hero-letter-glow 4s ease-in-out infinite;
+  z-index: 2;
+  position: relative;
+}
+
+.hero-brand-letter:nth-child(1) {
+  animation-delay: 0s;
+}
+
+.hero-brand-letter:nth-child(2) {
+  animation-delay: 0.12s;
+}
+
+.hero-brand-letter:nth-child(3) {
+  animation-delay: 0.24s;
+}
+
+.hero-brand-letter:nth-child(4) {
+  animation-delay: 0.5s;
+}
+
+.hero-brand-letter:nth-child(5) {
+  animation-delay: 0.62s;
+}
+
+.hero-brand-letter:nth-child(6) {
+  animation-delay: 0.74s;
+}
+
+.hero-brand-letter:nth-child(7) {
+  animation-delay: 0.86s;
+}
+
+@keyframes hero-letter-glow {
+
+  0%,
+  100% {
+    transform: scale(1) translateY(0);
+    text-shadow: none;
+    color: var(--lagoon-deep);
+  }
+
+  20% {
+    color: var(--lagoon);
+    text-shadow:
+      0 0 12px rgba(79, 184, 178, 0.8),
+      0 0 30px rgba(79, 184, 178, 0.4),
+      0 0 60px rgba(79, 184, 178, 0.15);
+    transform: scale(1.1) translateY(-3px);
+  }
+
+  40% {
+    transform: scale(1) translateY(0);
+    text-shadow: none;
+    color: var(--lagoon-deep);
+  }
+}
