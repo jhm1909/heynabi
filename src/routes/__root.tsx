@@ -1,5 +1,6 @@
 import {
   HeadContent,
+  Link,
   Scripts,
   createRootRoute,
 } from '@tanstack/react-router'
@@ -39,7 +40,22 @@ export const Route = createRootRoute({
     ],
   }),
   shellComponent: RootDocument,
+  notFoundComponent: NotFound,
 })
+
+function NotFound() {
+  return (
+    <div style={{ textAlign: 'center', padding: '4rem 1rem' }}>
+      <h1 style={{ fontSize: '2rem', marginBottom: '1rem' }}>404 — Page Not Found</h1>
+      <p style={{ marginBottom: '2rem', opacity: 0.7 }}>
+        The page you're looking for doesn't exist.
+      </p>
+      <Link to="/" style={{ color: 'var(--color-primary, #6366f1)', textDecoration: 'underline' }}>
+        Go back home
+      </Link>
+    </div>
+  )
+}
 
 function RootDocument({ children }: { children: React.ReactNode }) {
   return (
@@ -48,7 +64,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
         <HeadContent />
       </head>
-      <body className="font-sans antialiased" suppressHydrationWarning>
+      <body className="font-sans antialiased" style={{ position: 'relative' }} suppressHydrationWarning>
         {children}
         <TanStackDevtools
           config={{ position: 'bottom-right' }}

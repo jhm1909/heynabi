@@ -5,10 +5,14 @@ export function LoginButton() {
     const handleLogin = () => {
         const supabase = createClient()
 
+        // Extract the optional lang prefix from the current path (e.g. "/vi", "/en")
+        const pathSegments = window.location.pathname.split('/').filter(Boolean)
+        const langPrefix = pathSegments.length > 0 ? `/${pathSegments[0]}` : ''
+
         supabase.auth.signInWithOAuth({
             provider: 'google',
             options: {
-                redirectTo: `${window.location.origin}/auth/callback`,
+                redirectTo: `${window.location.origin}${langPrefix}/auth/callback`,
             },
         })
     }
