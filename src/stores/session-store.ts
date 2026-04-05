@@ -26,7 +26,7 @@ const initialState = {
     isPaused: false,
     sourceLang: 'ko',
     targetLang: 'vi',
-    sttEngine: 'web-speech' as SttEngine,
+    sttEngine: 'deepgram' as SttEngine,
     partialText: '',
     finalTexts: [],
 }
