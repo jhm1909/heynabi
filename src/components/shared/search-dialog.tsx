@@ -43,14 +43,14 @@ export function SearchDialog({ open, onClose }: SearchDialogProps) {
 
     // Group by section
     const sections = filtered.reduce<Record<string, typeof searchableItems>>((acc, item) => {
-        if (!acc[item.section]) acc[item.section] = []
+        if (!(item.section in acc)) acc[item.section] = []
         acc[item.section].push(item)
         return acc
     }, {})
 
     const handleSelect = (href: string) => {
         onClose()
-        navigate({ to: `/{-$lang}${href}` as string })
+        navigate({ to: `/{-$lang}${href}` })
     }
 
     if (!open) return null

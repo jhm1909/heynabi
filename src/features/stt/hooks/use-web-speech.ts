@@ -78,9 +78,20 @@ export function useWebSpeech(options: UseWebSpeechOptions = {}) {
                 let interimTranscript = ''
                 let finalTranscript = ''
 
+                console.debug('[STT] onresult event:', {
+                    resultIndex: event.resultIndex,
+                    resultsLength: event.results.length,
+                })
+
                 for (let i = event.resultIndex; i < event.results.length; i++) {
                     const result = event.results[i]
                     const transcript = result[0].transcript
+
+                    console.debug(`[STT] result[${i}]:`, {
+                        isFinal: result.isFinal,
+                        transcript,
+                        confidence: result[0].confidence,
+                    })
 
                     if (result.isFinal) {
                         finalTranscript += transcript
@@ -90,17 +101,20 @@ export function useWebSpeech(options: UseWebSpeechOptions = {}) {
                 }
 
                 if (finalTranscript.trim()) {
+                    console.debug('[STT] ✅ Final transcript:', finalTranscript.trim())
                     store.setPartialText('')
                     store.addFinalText(finalTranscript.trim(), '')
                     options.onFinalText?.(finalTranscript.trim())
                 }
 
                 if (interimTranscript) {
+                    console.debug('[STT] 📝 Interim:', interimTranscript)
                     store.setPartialText(interimTranscript)
                 }
             }
 
             recognition.onerror = (event: SpeechRecognitionErrorEvent) => {
+                console.debug('[STT] ❌ onerror:', event.error)
                 if (event.error === 'not-allowed') {
                     setError('Microphone access denied. Please allow mic access.')
                 } else if (event.error === 'no-speech') {
@@ -116,6 +130,7 @@ export function useWebSpeech(options: UseWebSpeechOptions = {}) {
             }
 
             recognition.onend = () => {
+                console.debug('[STT] 🔚 onend, statusRef:', statusRef.current)
                 // Auto-restart if still recording (Web Speech API stops after silence)
                 if (statusRef.current === 'recording' && recognitionRef.current) {
                     try {
@@ -128,6 +143,7 @@ export function useWebSpeech(options: UseWebSpeechOptions = {}) {
             }
 
             recognition.onstart = () => {
+                console.debug('[STT] 🟢 onstart — recognition active, lang:', recognition.lang)
                 setStatus('recording')
                 store.setRecording(true)
             }
