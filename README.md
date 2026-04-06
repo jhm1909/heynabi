@@ -14,6 +14,19 @@
 
 ---
 
+## Features
+
+- **Real-time transcription** — Stream lecture audio directly from your browser, no uploads required
+- **Multilingual translation** — Listen in Korean, Chinese, or Japanese; read in Vietnamese or English
+- **Smart sentence buffering** — Sentence boundary detection prevents mid-thought translations
+- **Korean spacing correction** — Auto-fixes Deepgram's missing whitespace in Korean output
+- **Session history** — Save, search, and export past lectures (Supabase + RLS)
+- **Multiple STT engines** — Switch between Deepgram, Soniox, or browser-native Web Speech API
+- **Responsive UI** — Mobile-first layout with side-by-side or interleaved transcript view
+- **Auth + RLS** — Supabase Auth with row-level security per user
+
+---
+
 ## How It Works
 
 ```
@@ -135,6 +148,15 @@ App runs at **http://localhost:3000**
 | **Deepgram Nova-3** | High | $200 free credit | Default, multilingual |
 | **Soniox** | Highest | Paid | Best Korean accuracy |
 | **Web Speech API** | Basic | Free | Chrome/Edge only, fallback |
+
+## Contributing
+
+Contributions are welcome! Please:
+
+1. Fork the repo and create a feature branch
+2. Run `npm run check` before committing
+3. Make sure `npm run test` and `npm run build` pass
+4. Open a PR with a clear description of changes
 
 ## License
 
