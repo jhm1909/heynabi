@@ -79,9 +79,15 @@ export const listSessions = createServerFn({ method: 'GET' }).handler(
         const cookieHeader = request.headers.get('cookie') ?? ''
         const supabase = createServerSupabaseClient(cookieHeader)
 
+        // Defense-in-depth: explicitly filter by user_id
+        // even though RLS enforces this at the DB level
+        const { data: { user } } = await supabase.auth.getUser()
+        if (!user) throw new Error('Unauthorized')
+
         const { data, error } = await supabase
             .from('sessions')
             .select('id, source_lang, target_lang, title, duration_ms, created_at')
+            .eq('user_id', user.id)
             .order('created_at', { ascending: false })
             .limit(50)
 

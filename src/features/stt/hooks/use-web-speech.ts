@@ -1,11 +1,13 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useSessionStore } from '#/stores/session-store'
+import type { SttStatus } from '../lib/types'
 
-export type SttStatus = 'idle' | 'connecting' | 'recording' | 'paused' | 'error'
+export type { SttStatus }
 
 interface UseWebSpeechOptions {
     language?: string
     onFinalText?: (text: string) => void
+    enabled?: boolean
 }
 
 // Language code mapping for Web Speech API (BCP-47)
@@ -23,7 +25,7 @@ const LANG_MAP: Record<string, string> = {
  * Same interface as useSoniox for drop-in replacement.
  */
 export function useWebSpeech(options: UseWebSpeechOptions = {}) {
-    const { language = 'ko' } = options
+    const { language = 'ko', enabled = true } = options
     const [status, setStatus] = useState<SttStatus>('idle')
     const [error, setError] = useState<string | null>(null)
 
@@ -50,6 +52,7 @@ export function useWebSpeech(options: UseWebSpeechOptions = {}) {
     }, [store])
 
     const start = useCallback(async () => {
+        if (!enabled) return
         try {
             // Check browser support — runtime feature detection
             /* eslint-disable @typescript-eslint/no-unnecessary-condition */

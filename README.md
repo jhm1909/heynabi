@@ -1,204 +1,122 @@
-Welcome to your new TanStack Start app! 
+# Hey Nabi
 
-# Getting Started
+Real-time lecture translation platform for international students. Listen to lectures in Korean, Chinese, or Japanese — read the translation in your language instantly.
 
-To run this application:
+## Architecture
+
+```
+Browser (mic)
+  → AudioWorklet (PCM 16kHz, 100ms chunks)
+  → WebSocket → Deepgram Nova-3 (STT)
+  → SentenceBoundaryDetector (smart buffering + commit)
+  → Zustand store
+  → Gemini Flash (AI translation with spacing correction)
+  → Interleaved UI (original + translation)
+```
+
+### Tech Stack
+
+| Layer | Technology |
+|-------|-----------|
+| Framework | TanStack Start (React 19 + SSR + file-based routing) |
+| Styling | Tailwind CSS v4 + Shadcn UI + Framer Motion |
+| State | Zustand |
+| Database | Supabase (PostgreSQL + Auth + RLS) |
+| AI Translation | Google Gemini Flash via Vercel AI SDK |
+| STT | Deepgram Nova-3 (primary), Soniox, Web Speech API |
+| Validation | Zod |
+| Build | Vite |
+
+### Project Structure
+
+```
+src/
+  features/
+    stt/
+      hooks/       — React hooks (use-deepgram, use-soniox, use-web-speech, use-stt)
+      lib/         — Audio pipeline, WebSocket management, shared types
+    translation/
+      hooks/       — useTranslation hook
+      prompts.ts   — Gemini translation prompts
+  components/
+    auth/          — Login, user menu
+    landing/       — Landing page components
+    layout/        — App shell (header, sidebar, mobile nav)
+    session/       — Session controls, panels, language selector
+    shared/        — Reusable UI (empty state, loading, search)
+    ui/            — Shadcn primitives
+  server/          — TanStack server functions (auth, translate, sessions, export, STT tokens)
+  stores/          — Zustand stores
+  lib/             — Utilities (i18n, Supabase client, sentence boundary, Korean spacing)
+  routes/          — File-based routing (/{lang}/app/...)
+  types/           — TypeScript type definitions
+```
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js 20+
+- npm
+
+### Environment Variables
+
+Copy `.env.example` to `.env` and fill in:
+
+```bash
+# Client-side (exposed to browser)
+VITE_SUPABASE_URL=https://your-project.supabase.co
+VITE_SUPABASE_ANON_KEY=your-anon-key
+
+# Server-side only
+GEMINI_API_KEY=your-gemini-key
+SONIOX_API_KEY=your-soniox-key
+DEEPGRAM_API_KEY=your-deepgram-key
+DEEPGRAM_PROJECT_ID=your-deepgram-project-id  # Required for production (scoped keys)
+```
+
+### Development
 
 ```bash
 npm install
 npm run dev
 ```
 
-# Building For Production
+App runs at http://localhost:3000.
 
-To build this application for production:
+### Database
+
+Supabase migrations are in `supabase/migrations/`. Apply them via the Supabase CLI:
 
 ```bash
-npm run build
+npx supabase db push
 ```
 
-## Testing
-
-This project uses [Vitest](https://vitest.dev/) for testing. You can run the tests with:
+### Testing
 
 ```bash
 npm run test
 ```
 
-## Styling
-
-This project uses [Tailwind CSS](https://tailwindcss.com/) for styling.
-
-### Removing Tailwind CSS
-
-If you prefer not to use Tailwind CSS:
-
-1. Remove the demo pages in `src/routes/demo/`
-2. Replace the Tailwind import in `src/styles.css` with your own styles
-3. Remove `tailwindcss()` from the plugins array in `vite.config.ts`
-4. Uninstall the packages: `npm install @tailwindcss/vite tailwindcss -D`
-
-## Linting & Formatting
-
-
-This project uses [eslint](https://eslint.org/) and [prettier](https://prettier.io/) for linting and formatting. Eslint is configured using [tanstack/eslint-config](https://tanstack.com/config/latest/docs/eslint). The following scripts are available:
+### Linting & Formatting
 
 ```bash
-npm run lint
-npm run format
-npm run check
+npm run lint       # Check
+npm run check      # Auto-fix
 ```
 
+## Supported Languages
 
+Korean, Vietnamese, English, Chinese, Japanese
 
-## Routing
+## STT Engines
 
-This project uses [TanStack Router](https://tanstack.com/router) with file-based routing. Routes are managed as files in `src/routes`.
+| Engine | Quality | Cost | Notes |
+|--------|---------|------|-------|
+| Deepgram Nova-3 | High | $200 free credit | Default, multilingual |
+| Soniox | Highest | Paid | Best Korean accuracy |
+| Web Speech API | Basic | Free | Chrome/Edge only, fallback |
 
-### Adding A Route
+## License
 
-To add a new route to your application just add a new file in the `./src/routes` directory.
-
-TanStack will automatically generate the content of the route file for you.
-
-Now that you have two routes you can use a `Link` component to navigate between them.
-
-### Adding Links
-
-To use SPA (Single Page Application) navigation you will need to import the `Link` component from `@tanstack/react-router`.
-
-```tsx
-import { Link } from "@tanstack/react-router";
-```
-
-Then anywhere in your JSX you can use it like so:
-
-```tsx
-<Link to="/about">About</Link>
-```
-
-This will create a link that will navigate to the `/about` route.
-
-More information on the `Link` component can be found in the [Link documentation](https://tanstack.com/router/v1/docs/framework/react/api/router/linkComponent).
-
-### Using A Layout
-
-In the File Based Routing setup the layout is located in `src/routes/__root.tsx`. Anything you add to the root route will appear in all the routes. The route content will appear in the JSX where you render `{children}` in the `shellComponent`.
-
-Here is an example layout that includes a header:
-
-```tsx
-import { HeadContent, Scripts, createRootRoute } from '@tanstack/react-router'
-
-export const Route = createRootRoute({
-  head: () => ({
-    meta: [
-      { charSet: 'utf-8' },
-      { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { title: 'My App' },
-    ],
-  }),
-  shellComponent: ({ children }) => (
-    <html lang="en">
-      <head>
-        <HeadContent />
-      </head>
-      <body>
-        <header>
-          <nav>
-            <Link to="/">Home</Link>
-            <Link to="/about">About</Link>
-          </nav>
-        </header>
-        {children}
-        <Scripts />
-      </body>
-    </html>
-  ),
-})
-```
-
-More information on layouts can be found in the [Layouts documentation](https://tanstack.com/router/latest/docs/framework/react/guide/routing-concepts#layouts).
-
-## Server Functions
-
-TanStack Start provides server functions that allow you to write server-side code that seamlessly integrates with your client components.
-
-```tsx
-import { createServerFn } from '@tanstack/react-start'
-
-const getServerTime = createServerFn({
-  method: 'GET',
-}).handler(async () => {
-  return new Date().toISOString()
-})
-
-// Use in a component
-function MyComponent() {
-  const [time, setTime] = useState('')
-  
-  useEffect(() => {
-    getServerTime().then(setTime)
-  }, [])
-  
-  return <div>Server time: {time}</div>
-}
-```
-
-## API Routes
-
-You can create API routes by using the `server` property in your route definitions:
-
-```tsx
-import { createFileRoute } from '@tanstack/react-router'
-import { json } from '@tanstack/react-start'
-
-export const Route = createFileRoute('/api/hello')({
-  server: {
-    handlers: {
-      GET: () => json({ message: 'Hello, World!' }),
-    },
-  },
-})
-```
-
-## Data Fetching
-
-There are multiple ways to fetch data in your application. You can use TanStack Query to fetch data from a server. But you can also use the `loader` functionality built into TanStack Router to load the data for a route before it's rendered.
-
-For example:
-
-```tsx
-import { createFileRoute } from '@tanstack/react-router'
-
-export const Route = createFileRoute('/people')({
-  loader: async () => {
-    const response = await fetch('https://swapi.dev/api/people')
-    return response.json()
-  },
-  component: PeopleComponent,
-})
-
-function PeopleComponent() {
-  const data = Route.useLoaderData()
-  return (
-    <ul>
-      {data.results.map((person) => (
-        <li key={person.name}>{person.name}</li>
-      ))}
-    </ul>
-  )
-}
-```
-
-Loaders simplify your data fetching logic dramatically. Check out more information in the [Loader documentation](https://tanstack.com/router/latest/docs/framework/react/guide/data-loading#loader-parameters).
-
-# Demo files
-
-Files prefixed with `demo` can be safely deleted. They are there to provide a starting point for you to play around with the features you've installed.
-
-# Learn More
-
-You can learn more about all of the offerings from TanStack in the [TanStack documentation](https://tanstack.com).
-
-For TanStack Start specific documentation, visit [TanStack Start](https://tanstack.com/start).
+ISC

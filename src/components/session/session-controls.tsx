@@ -1,6 +1,6 @@
 import { Mic, Square, Pause, Play } from 'lucide-react'
 import { Button } from '#/components/ui/button'
-import type { SttStatus } from '#/features/stt/hooks/use-soniox'
+import type { SttStatus } from '#/features/stt/lib/types'
 
 interface SessionControlsProps {
     status: SttStatus

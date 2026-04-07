@@ -12,6 +12,8 @@
  * 6. flush()         – user pressed Stop
  */
 
+import { addKoreanSpacing } from './korean-spacing'
+
 export interface DeepgramWord {
     word: string
     punctuated_word?: string
@@ -36,13 +38,20 @@ const SENTENCE_END = /[.?!。]\s*$/
 
 /**
  * Build a correctly-spaced transcript from Deepgram's words array.
- * Falls back to raw transcript if words array is empty.
+ * Falls back to Korean morphological spacing if words array is empty.
  */
 export function buildSpacedText(transcript: string, words?: DeepgramWord[]): string {
     if (words && words.length > 0) {
-        return words.map(w => w.punctuated_word ?? w.word).join(' ')
+        const fromWords = words.map(w => w.punctuated_word ?? w.word).join(' ')
+        console.log(`[SBD] ✅ words spacing (${words.length} words): "${fromWords.slice(0, 50)}"`)
+        return fromWords
     }
-    return transcript
+    // Fallback: Korean morphological spacing
+    const spaced = addKoreanSpacing(transcript)
+    if (spaced !== transcript) {
+        console.log(`[SBD] ⚠️ fallback spacing: "${transcript.slice(0, 30)}" → "${spaced.slice(0, 30)}"`)
+    }
+    return spaced
 }
 
 export class SentenceBoundaryDetector {

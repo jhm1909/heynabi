@@ -1,12 +1,14 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { getSonioxToken } from '#/server/stt'
 import { useSessionStore } from '#/stores/session-store'
+import type { SttStatus } from '../lib/types'
 
-export type SttStatus = 'idle' | 'connecting' | 'recording' | 'paused' | 'error'
+export type { SttStatus }
 
 interface UseSonioxOptions {
     language?: string
     onFinalText?: (text: string) => void
+    enabled?: boolean
 }
 
 const SPECIAL_TOKENS = new Set(['<end>', '<fin>'])
@@ -17,7 +19,7 @@ const WS_URL = 'wss://stt-rt.soniox.com/transcribe-websocket'
  * Protocol matches the official @soniox/node SDK's RealtimeSttSession.
  */
 export function useSoniox(options: UseSonioxOptions = {}) {
-    const { language = 'ko' } = options
+    const { language = 'ko', enabled = true } = options
     const [status, setStatus] = useState<SttStatus>('idle')
     const [error, setError] = useState<string | null>(null)
 
@@ -56,6 +58,7 @@ export function useSoniox(options: UseSonioxOptions = {}) {
     }, [store])
 
     const start = useCallback(async () => {
+        if (!enabled) return
         try {
             setStatus('connecting')
             setError(null)

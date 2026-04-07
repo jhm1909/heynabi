@@ -161,7 +161,7 @@ function ScrollablePanel({
     translationError,
 }: {
     finalTexts: Array<{ original: string; translated: string }>
-    translationEntries: Array<{ original: string; translated: string | null }>
+    translationEntries: Array<{ id: number; original: string; translated: string | null }>
     partialText: string
     translationError: string | null
 }) {

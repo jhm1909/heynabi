@@ -1,4 +1,4 @@
-import type { SttStatus } from './use-soniox'
+import type { SttStatus, SttHookResult } from '../lib/types'
 import { useDeepgram } from './use-deepgram'
 import { useSoniox } from './use-soniox'
 import { useWebSpeech } from './use-web-speech'
@@ -13,32 +13,24 @@ interface UseSttOptions {
 
 /**
  * Unified STT hook that switches between engines.
+ * Only the selected engine is enabled — others skip initialization.
+ *
  * - deepgram: Deepgram Nova-3, $200 free credit (default)
  * - soniox: Premium quality, requires API key + credits
  * - web-speech: Free, built-in Chrome/Edge (fallback)
  */
 export function useStt({ engine, language, onFinalText }: UseSttOptions) {
-    const deepgram = useDeepgram({ language, onFinalText })
-    const soniox = useSoniox({ language, onFinalText })
-    const webSpeech = useWebSpeech({ language, onFinalText })
+    const deepgram = useDeepgram({ language, onFinalText, enabled: engine === 'deepgram' })
+    const soniox = useSoniox({ language, onFinalText, enabled: engine === 'soniox' })
+    const webSpeech = useWebSpeech({ language, onFinalText, enabled: engine === 'web-speech' })
 
-    // Return the active engine's interface
-    const active = engine === 'deepgram'
-        ? deepgram
-        : engine === 'soniox'
-            ? soniox
-            : webSpeech
+    const active: SttHookResult =
+        engine === 'deepgram' ? deepgram
+            : engine === 'soniox' ? soniox
+                : webSpeech
 
     return {
         ...active,
         engine,
-    } as {
-        start: () => Promise<void>
-        stop: () => void
-        pause: () => void
-        resume: () => void
-        status: SttStatus
-        error: string | null
-        engine: SttEngine
-    }
+    } as SttHookResult & { engine: SttEngine }
 }

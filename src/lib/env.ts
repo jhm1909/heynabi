@@ -8,6 +8,8 @@ const envSchema = z.object({
 const serverEnvSchema = z.object({
     GEMINI_API_KEY: z.string().min(1, 'GEMINI_API_KEY is required'),
     SONIOX_API_KEY: z.string().min(1, 'SONIOX_API_KEY is required'),
+    DEEPGRAM_API_KEY: z.string().min(1, 'DEEPGRAM_API_KEY is required'),
+    DEEPGRAM_PROJECT_ID: z.string().optional(),
 })
 
 /**
@@ -38,6 +40,8 @@ export function validateServerEnv() {
     const result = serverEnvSchema.safeParse({
         GEMINI_API_KEY: process.env.GEMINI_API_KEY,
         SONIOX_API_KEY: process.env.SONIOX_API_KEY,
+        DEEPGRAM_API_KEY: process.env.DEEPGRAM_API_KEY,
+        DEEPGRAM_PROJECT_ID: process.env.DEEPGRAM_PROJECT_ID,
     })
 
     if (!result.success) {

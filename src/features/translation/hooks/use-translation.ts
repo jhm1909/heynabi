@@ -7,27 +7,34 @@ interface UseTranslationOptions {
 }
 
 export interface TranslationEntry {
+    id: number
     original: string
     translated: string | null // null = still translating
 }
 
+/**
+ * Hook for managing translation requests.
+ *
+ * Uses a monotonic ID to match translation responses to their slots,
+ * preventing race conditions when multiple translations are in-flight.
+ */
 export function useTranslation({ sourceLang, targetLang }: UseTranslationOptions) {
     const [entries, setEntries] = useState<TranslationEntry[]>([])
     const [isTranslating, setIsTranslating] = useState(false)
     const [error, setError] = useState<string | null>(null)
 
-    // Stable index counter — avoids stale closure from entries.length in deps
-    const nextIdxRef = useRef(0)
+    // Monotonic ID counter — survives re-renders, used to match responses to slots
+    const nextIdRef = useRef(0)
 
     const translate = useCallback(
         async (text: string) => {
             if (!text.trim()) return
 
-            // Reserve a slot immediately so order is preserved
-            const idx = nextIdxRef.current++
+            // Reserve a slot with a unique ID
+            const id = nextIdRef.current++
             setEntries((prev) => [
                 ...prev,
-                { original: text, translated: null },
+                { id, original: text, translated: null },
             ])
 
             try {
@@ -38,10 +45,10 @@ export function useTranslation({ sourceLang, targetLang }: UseTranslationOptions
                     data: { text, sourceLang, targetLang },
                 })
 
-                // Update the reserved slot with the result + corrected spacing
+                // Update by ID instead of array index — safe against concurrent mutations
                 setEntries((prev) =>
-                    prev.map((e, i) =>
-                        i === idx
+                    prev.map((e) =>
+                        e.id === id
                             ? { ...e, original: correctedOriginal ?? e.original, translated: translation }
                             : e,
                     ),
@@ -50,10 +57,9 @@ export function useTranslation({ sourceLang, targetLang }: UseTranslationOptions
                 setError(
                     err instanceof Error ? err.message : 'Translation failed',
                 )
-                // Mark as failed so spinner disappears
                 setEntries((prev) =>
-                    prev.map((e, i) =>
-                        i === idx ? { ...e, translated: 'Translation failed' } : e,
+                    prev.map((e) =>
+                        e.id === id ? { ...e, translated: 'Translation failed' } : e,
                     ),
                 )
             } finally {
@@ -63,21 +69,15 @@ export function useTranslation({ sourceLang, targetLang }: UseTranslationOptions
         [sourceLang, targetLang],
     )
 
-    // Keep backward compat: single concatenated string
-    const translatedText = entries
-        .map((e) => e.translated ?? '')
-        .filter(Boolean)
-        .join('\n')
-
     const reset = useCallback(() => {
         setEntries([])
+        nextIdRef.current = 0
         setError(null)
     }, [])
 
     return {
         translate,
         entries,
-        translatedText,
         isTranslating,
         error,
         reset,

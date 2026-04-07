@@ -15,6 +15,6 @@ export default [
     },
   },
   {
-    ignores: ['eslint.config.js', 'prettier.config.js', '.agent/**', 'dist/**', 'coverage/**'],
+    ignores: ['eslint.config.js', 'prettier.config.js', '.agent/**', 'dist/**', 'coverage/**', '**/*.worklet.js'],
   },
 ]
