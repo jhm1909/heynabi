@@ -7,6 +7,8 @@ import { tanstackStart } from '@tanstack/react-start/plugin/vite'
 import viteReact from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 
+import { cloudflare } from "@cloudflare/vite-plugin";
+
 const config = defineConfig({
   // Only VITE_ vars are exposed to the client bundle.
   // Server-only vars (SONIOX_, GEMINI_, GOOGLE_) are accessed via process.env in server functions.
@@ -17,6 +19,11 @@ const config = defineConfig({
     tailwindcss(),
     tanstackStart(),
     viteReact(),
+    cloudflare({
+      viteEnvironment: {
+        name: "ssr"
+      }
+    })
   ],
 })
 
